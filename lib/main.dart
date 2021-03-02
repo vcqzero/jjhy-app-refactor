@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import './pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
+import './pages/profile/Settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,9 +30,9 @@ class MyApp extends StatelessWidget {
       ),
       home: MainPage(),
       // initialRoute: MainPage.routeName,
-      // routes: {
-      //   MainPage.routeName: (context) => MainPage(),
-      // },
+      routes: {
+        SettingsPage.routeName: (context) => SettingsPage(),
+      },
     );
   }
 }

@@ -15,6 +15,7 @@ class _TodoPageState extends State<TodoPage> {
         appBar: AppBar(
           // toolbarHeight: 0,
           title: Text('待办'),
+          centerTitle: true,
         ),
       ),
     );

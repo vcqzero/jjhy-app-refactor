@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:www/pages/profile/Settings.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key key}) : super(key: key);
@@ -15,6 +16,13 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: AppBar(
           // toolbarHeight: 0,
           title: Text('我的'),
+          centerTitle: true,
+        ),
+        body: RaisedButton(
+          onPressed: () {
+            Navigator.pushNamed(context, SettingsPage.routeName);
+          },
+          child: Text('ceshi'),
         ),
       ),
     );

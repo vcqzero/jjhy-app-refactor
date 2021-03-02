@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:www/pages/profile/Settings.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);
@@ -13,8 +14,8 @@ class _HomePageState extends State<HomePage> {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          // toolbarHeight: 0,
-          title: Text('首页'),
+          toolbarHeight: 0,
+          // title: Text('首页'),
         ),
       ),
     );
