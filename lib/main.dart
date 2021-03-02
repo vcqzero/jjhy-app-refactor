@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './pages/home/Index.dart';
+import './pages/todo/Index.dart';
+import './pages/profile/Index.dart';
 
 void main() {
   runApp(MyApp());
@@ -25,10 +27,48 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      initialRoute: HomePage.routeName,
-      routes: {
-        HomePage.routeName: (context) => HomePage(),
-      },
+      home: MainPage(),
+      // initialRoute: MainPage.routeName,
+      // routes: {
+      //   MainPage.routeName: (context) => MainPage(),
+      // },
+    );
+  }
+}
+
+class MainPage extends StatefulWidget {
+  MainPage({Key key}) : super(key: key);
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  int currentIndex = 0;
+  List mainPages = [HomePage(), TodoPage(), ProfilePage()];
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Scaffold(
+        appBar: AppBar(
+          toolbarHeight: 0,
+        ),
+        body: mainPages[currentIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex: currentIndex,
+          onTap: (index) => {
+            setState(() {
+              currentIndex = index;
+            })
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.today_outlined), label: '待办'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
+          ],
+        ),
+      ),
     );
   }
 }
