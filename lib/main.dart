@@ -9,10 +9,6 @@ import './pages/profile/Settings.dart';
 void main() {
   runApp(MyApp());
   // 定义状态栏
-  // SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
-  //   statusBarColor: Colors.lightBlue.shade800,
-  // );
-  // SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
 
   // 禁止横屏
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -26,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: '京9',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MainPage(),
@@ -56,6 +52,7 @@ class _MainPageState extends State<MainPage> {
     return WillPopScope(
         child: Scaffold(
           appBar: AppBar(
+            brightness: Brightness.dark,
             toolbarHeight: 0,
           ),
           body: mainPages[currentIndex],

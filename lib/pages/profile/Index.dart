@@ -14,11 +14,10 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       child: Scaffold(
         appBar: AppBar(
-          // toolbarHeight: 0,
           title: Text('我的'),
           centerTitle: true,
         ),
-        body: RaisedButton(
+        body: ElevatedButton(
           onPressed: () {
             Navigator.pushNamed(context, SettingsPage.routeName);
           },
