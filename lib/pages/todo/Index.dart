@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class TodoPage extends StatefulWidget {
-  TodoPage({Key key}) : super(key: key);
+  TodoPage({Key? key}) : super(key: key);
 
   @override
   _TodoPageState createState() => _TodoPageState();
