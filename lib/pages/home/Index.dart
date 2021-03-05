@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app/widgets/MyWidgets.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -12,10 +13,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: AppBar(
-          toolbarHeight: 0,
-          // title: Text('首页'),
-        ),
+        appBar: MyWidgets.getAppBar(hidden: true),
       ),
     );
   }

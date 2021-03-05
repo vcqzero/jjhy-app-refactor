@@ -1,3 +1,4 @@
+import 'package:app/widgets/MyWidgets.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -13,11 +14,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: AppBar(
-          // toolbarHeight: 0,
-          title: Text('设置'),
-          centerTitle: true,
-        ),
+        appBar: MyWidgets.getAppBar(title: '设置'),
       ),
     );
   }

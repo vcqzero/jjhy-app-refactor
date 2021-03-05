@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:www/utils/toast.dart';
+import 'package:app/utils/toast.dart';
 import './pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
 import './pages/profile/Settings.dart';
+import 'package:app/widgets/MyWidgets.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,6 +45,36 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   int currentIndex = 0;
   List mainPages = [HomePage(), TodoPage(), ProfilePage()];
+  List pageConfigs = [
+    {
+      'title': '首页',
+      'icon': Icons.home,
+      'body': HomePage(),
+    },
+    {
+      'title': '待办',
+      'icon': Icons.today_outlined,
+      'body': TodoPage(),
+    },
+    {
+      'title': '我的',
+      'icon': Icons.person,
+      'body': ProfilePage(),
+    },
+  ];
+
+  /// 获取底部配置内容
+  get bottomItems {
+    int len = pageConfigs.length;
+    List<BottomNavigationBarItem> items = [];
+    for (var i = 0; i < len; i++) {
+      items.add(
+        BottomNavigationBarItem(
+            icon: Icon(pageConfigs[i]['icon']), label: pageConfigs[i]['title']),
+      );
+    }
+    return items;
+  }
 
   DateTime lastBackTime = DateTime.now();
 
@@ -51,11 +82,8 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
         child: Scaffold(
-          appBar: AppBar(
-            brightness: Brightness.dark,
-            toolbarHeight: 0,
-          ),
-          body: mainPages[currentIndex],
+          // appBar: MyWidgets.getAppBar(),
+          body: pageConfigs[currentIndex]['body'],
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: (index) => {
@@ -63,12 +91,7 @@ class _MainPageState extends State<MainPage> {
                 currentIndex = index;
               })
             },
-            items: [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: '首页'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.today_outlined), label: '待办'),
-              BottomNavigationBarItem(icon: Icon(Icons.person), label: '我的'),
-            ],
+            items: bottomItems,
           ),
         ),
         onWillPop: () async {
