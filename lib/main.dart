@@ -5,7 +5,6 @@ import './pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
 import './pages/profile/Settings.dart';
-import 'package:app/widgets/MyWidgets.dart';
 
 void main() {
   runApp(MyApp());
