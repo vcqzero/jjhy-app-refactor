@@ -13,13 +13,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    AppSetings.getBanners().then((response) {
-      print(response.data);
-      print(response.headers);
-      print(response.request);
-      print(response.statusCode);
-    });
-    print('object1');
+    AppSetings.getBanners().then((response) {});
   }
 
   @override
