@@ -1,4 +1,5 @@
 import 'package:app/api/AppSetings.dart';
+import 'package:app/assets/MyImages.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
 
@@ -10,10 +11,27 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String? imageUrl;
   @override
   void initState() {
     super.initState();
-    AppSetings.getBanners().then((response) {});
+    AppSetings.getBanners().then((response) {
+      final String? imgUrl = response.data?['items']?[0]?['url'];
+      if (imgUrl != null) {
+        setState(() {
+          imageUrl = imgUrl;
+        });
+      }
+    });
+  }
+
+  /// 加载banner
+  Widget _getBannerImageWidget() {
+    if (imageUrl == null) {
+      return Image.asset(MyImages.defaultBannerImage);
+    } else {
+      return Image.network(imageUrl!);
+    }
   }
 
   @override
@@ -23,10 +41,8 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Container(
-            child: Image.network(
-              'https://api.jjhycom.cn/storage/appClient/banners/ecaLvi1yGGpX3EtSpADD69nZzZv4yDWpVC6IQbOj.jpeg',
-              fit: BoxFit.contain,
-            ),
+            child: _getBannerImageWidget(),
+            margin: EdgeInsets.only(bottom: 10),
           ),
           Expanded(
             flex: 1,
