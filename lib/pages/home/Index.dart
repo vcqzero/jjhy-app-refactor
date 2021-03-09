@@ -1,5 +1,6 @@
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/MyImages.dart';
+import 'package:app/pages/home/Widges/TheIconItem.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
 
@@ -49,45 +50,11 @@ class _HomePageState extends State<HomePage> {
             child: GridView.count(
               crossAxisCount: 3,
               children: [
-                Container(
-                  color: Colors.white,
-                  alignment: Alignment.center,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ClipOval(
-                        child: Container(
-                          color: Colors.pink[400],
-                          height: 64,
-                          width: 64,
-                          child: Icon(
-                            Icons.wifi,
-                            size: 36,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 5),
-                        child: Text(
-                          'data',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                TheIconItem(
+                  icon: Icons.wifi,
+                  lable: '答题上网',
+                  color: Colors.pink[400],
                 ),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
-                Text('data'),
               ],
             ),
           )
