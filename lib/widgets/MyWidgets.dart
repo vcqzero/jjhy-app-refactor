@@ -10,4 +10,17 @@ class MyWidgets {
       centerTitle: true,
     );
   }
+
+  static getOutlineButton({void Function()? onPressed, required String lable}) {
+    return OutlinedButton(
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all(Colors.blue),
+      ),
+      onPressed: onPressed,
+      child: Text(
+        lable,
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
 }

@@ -1,8 +1,7 @@
-import 'dart:developer';
-
 import 'package:app/api/AppSetings.dart';
-import 'package:app/assets/MyImages.dart';
+import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
+import 'package:app/store/store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
@@ -20,8 +19,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    log('initState');
     _queryBanner();
+    print(store.state.user.id);
   }
 
   void _queryBanner() {
@@ -29,7 +28,6 @@ class _HomePageState extends State<HomePage> {
     cancelToken = res.cancelToken;
     res.future.then((response) {
       final String? imgUrl = response.data?['items']?[0]?['url'];
-      log('message');
       if (imgUrl != null) {
         setState(() {
           imageUrl = imgUrl;
@@ -43,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   /// 加载banner
   Widget _getBannerImageWidget() {
     if (imageUrl == null) {
-      return Image.asset(MyImages.defaultBannerImage);
+      return Image.asset(ImageAssets.defaultBannerImage);
     } else {
       return Image.network(imageUrl!);
     }

@@ -1,6 +1,7 @@
+import 'package:app/pages/login/Index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:app/utils/toast.dart';
+import 'package:app/utils/MyToast.dart';
 import 'pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
       // initialRoute: MainPage.routeName,
       routes: {
         SettingsPage.routeName: (context) => SettingsPage(),
+        LoginPage.routeName: (context) => LoginPage(),
       },
     );
   }

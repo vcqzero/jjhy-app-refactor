@@ -1,41 +1,59 @@
 import 'package:redux/redux.dart';
 
-class AppState {
-  final List<String> items;
-  AppState(this.items);
+class User {
+  int id;
+  String username;
+  String tel;
+  List<String>? roles;
+  Map? workyard;
+  Map? jpush;
+  List? workyards;
+  User({
+    required this.id,
+    required this.tel,
+    required this.username,
+    this.jpush,
+    this.roles,
+    this.workyard,
+    this.workyards,
+  });
+}
+
+final _defaultUser = User(id: 0, tel: '', username: '');
+
+class _AppState {
+  User user;
+  _AppState({required this.user});
 }
 
 // Define your Actions
-class AddItemAction {
-  String? item;
-}
+class ClearUserAction {}
 
 class PerformSearchAction {
   String? query;
 }
 
-List<String> itemsReducer(List<String> items, action) {
-  if (action is AddItemAction) {
-    // Notice how we don't need to recreate the entire state tree! We just focus
-    // on returning a new List of Items.
-    return new List.from(items)..add(action.item!);
+User _userReducer(User user, action) {
+  if (action is ClearUserAction) {
+    return _defaultUser;
   } else {
-    return items;
+    return user;
   }
 }
 
-loggingMiddleware(Store<AppState> store, action, NextDispatcher next) {
+_loggingMiddleware(Store<_AppState> store, action, NextDispatcher next) {
   print('${new DateTime.now()}: $action');
   next(action);
 }
 
-AppState appStateReducer(AppState state, action) => new AppState(
-      itemsReducer(state.items, action),
+_AppState _appStateReducer(_AppState state, action) => new _AppState(
+      user: _userReducer(state.user, action),
     );
 
-final defaultAppState = AppState([]);
-final store = new Store<AppState>(
-  appStateReducer,
-  initialState: defaultAppState,
-  middleware: [loggingMiddleware],
+final store = new Store<_AppState>(
+  _appStateReducer,
+  initialState: _AppState(
+    user: _defaultUser,
+  ),
+  middleware: [_loggingMiddleware],
 );

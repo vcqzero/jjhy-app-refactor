@@ -1,3 +1,4 @@
+import 'package:app/pages/login/Index.dart';
 import 'package:app/widgets/MyWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/profile/Settings.dart';
@@ -17,9 +18,9 @@ class _ProfilePageState extends State<ProfilePage> {
         appBar: MyWidgets.getAppBar(title: '我的'),
         body: ElevatedButton(
           onPressed: () {
-            Navigator.pushNamed(context, SettingsPage.routeName);
+            Navigator.pushNamed(context, LoginPage.routeName);
           },
-          child: Text('ceshi'),
+          child: Text('登录'),
         ),
       ),
     );
