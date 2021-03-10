@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/MyImages.dart';
 import 'package:app/pages/home/Widges/TheIconItem.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
 
@@ -13,16 +16,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String? imageUrl;
+  CancelToken? cancelToken;
   @override
   void initState() {
     super.initState();
-    AppSetings.getBanners().then((response) {
+    log('initState');
+    _queryBanner();
+  }
+
+  void _queryBanner() {
+    final MyResponse res = AppSetings.getBanners();
+    cancelToken = res.cancelToken;
+    res.future.then((response) {
       final String? imgUrl = response.data?['items']?[0]?['url'];
+      log('message');
       if (imgUrl != null) {
         setState(() {
           imageUrl = imgUrl;
         });
       }
+    }).catchError((onError) {
+      print(onError);
     });
   }
 
@@ -62,5 +76,14 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.grey[100],
     );
+  }
+
+  @override
+  void dispose() {
+    // 取消网络请求
+    if (cancelToken != null) {
+      cancelToken!.cancel();
+    }
+    super.dispose();
   }
 }
