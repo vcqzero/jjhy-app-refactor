@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/MyImages.dart';
-import 'package:app/pages/home/Widges/TheIconItem.dart';
+import 'package:app/pages/home/widges/TheIconItem.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
