@@ -2,12 +2,14 @@ import 'package:app/pages/login/Index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
+import 'package:get_storage/get_storage.dart';
 import 'pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
 import './pages/profile/Settings.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(MyApp());
   // 定义状态栏
 

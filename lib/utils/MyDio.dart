@@ -52,13 +52,19 @@ class MyDio {
         onError: (DioError e) async {
           // The request was made and the server responded with a status code
           // that falls out of the range of 2xx and is also not 304.
-          if (e.response != null) {
-          } else {
-            // Something happened in setting up or sending the request that triggered an Error
-          }
+          // if (e.response != null) {
+          // } else {
+          //   // Something happened in setting up or sending the request that triggered an Error
+          // }
           return e; //continue
         },
       ),
     );
+    // 请求日志
+    _instance.interceptors.add(LogInterceptor(
+      requestHeader: false,
+      responseHeader: false,
+      responseBody: true,
+    ));
   }
 }

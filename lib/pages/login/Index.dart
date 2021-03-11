@@ -2,7 +2,9 @@ import 'dart:ui';
 import 'package:app/api/AuthApi.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyStorage.dart';
 import 'package:app/widgets/MyWidgets.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -43,7 +45,9 @@ class _LoginIndexState extends State<LoginPage> {
           // 登录表单
           Padding(
             padding: EdgeInsets.all(10),
-            child: _ThePasswordSection(),
+            child: _loginMethod == LoginMethods.username
+                ? _ThePasswordSection()
+                : _ThePhoneSection(),
           ),
 
           // 登录方式切换按钮
@@ -98,6 +102,7 @@ class _ThePasswordSectionState extends State<_ThePasswordSection> {
             helperText: (_showHelper && _usernameController.text.isEmpty)
                 ? '请输入用户名或手机号'
                 : null,
+            prefixIcon: Icon(Icons.person),
             suffixIcon: _usernameController.text.isNotEmpty
                 ? GestureDetector(
                     child: Icon(Icons.close),
@@ -123,6 +128,7 @@ class _ThePasswordSectionState extends State<_ThePasswordSection> {
             helperText: (_showHelper && _passwordController.text.isEmpty)
                 ? '请输入登录密码'
                 : null,
+            prefixIcon: Icon(Icons.lock),
             suffixIcon: _passwordController.text.isNotEmpty
                 ? GestureDetector(
                     child: Icon(Icons.remove_red_eye),
@@ -139,33 +145,74 @@ class _ThePasswordSectionState extends State<_ThePasswordSection> {
         SizedBox(
           height: 15,
         ),
-        Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: MyWidgets.getOutlineButton(
-                  lable: '立即登录',
-                  onPressed: () {
-                    String username = _usernameController.text;
-                    String password = _passwordController.text;
-                    if (username.isEmpty || password.isEmpty) {
-                      return setState(() {
-                        _showHelper = true;
-                      });
-                    }
-                    // 进行登录
-                    MyResponse res = AuthApi.authByPassword(
-                      username: username,
-                      password: password,
-                    );
-                    res.future.then((res) {
-                      print(res);
-                    }).catchError((err) {
-                      print(err);
-                    });
-                  }),
-            )
-          ],
+        MyElevatedButton(
+          label: '立即登录',
+          onPressed: () {
+            String username = _usernameController.text;
+            String password = _passwordController.text;
+            if (username.isEmpty || password.isEmpty) {
+              return setState(() {
+                _showHelper = true;
+              });
+            }
+            // 进行登录
+            MyResponse res = AuthApi.authByPassword(
+              username: username,
+              password: password,
+            );
+            res.future.then((res) {
+              MyStorage.setToken(res.data['token']);
+            }).catchError((err) {
+              print('err');
+              print(err.type);
+            });
+          },
+        )
+      ],
+    );
+  }
+}
+
+class _ThePhoneSection extends StatefulWidget {
+  _ThePhoneSection({Key? key}) : super(key: key);
+
+  @override
+  __ThePhoneSectionState createState() => __ThePhoneSectionState();
+}
+
+class __ThePhoneSectionState extends State<_ThePhoneSection> {
+  TextEditingController _controller = TextEditingController();
+  bool _showHelper = false;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        TextField(
+          controller: _controller,
+          onChanged: (val) {
+            setState(() {});
+          },
+          decoration: InputDecoration(
+            hintText: '手机号',
+            helperText:
+                (_showHelper && _controller.text.isEmpty) ? '请输入手机号' : null,
+            prefixIcon: Icon(
+              Icons.phone_android,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        MyElevatedButton(
+          label: '发送验证码',
+          onPressed: () {
+            if (_controller.text.isEmpty) {
+              setState(() {
+                _showHelper = true;
+              });
+            }
+          },
         )
       ],
     );
