@@ -1,5 +1,11 @@
 import 'package:dio/dio.dart';
 
+class MyResponse {
+  Future<Response> future;
+  CancelToken? cancelToken;
+  MyResponse({required this.future, this.cancelToken});
+}
+
 class MyDio {
   static const baseUrl = 'https://api.jjhycom.cn/api';
   static bool _inited = false;

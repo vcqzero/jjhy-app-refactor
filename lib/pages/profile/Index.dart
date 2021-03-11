@@ -1,7 +1,6 @@
 import 'package:app/pages/login/Index.dart';
 import 'package:app/widgets/MyWidgets.dart';
 import 'package:flutter/material.dart';
-import 'package:app/pages/profile/Settings.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);

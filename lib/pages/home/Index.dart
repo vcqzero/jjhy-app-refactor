@@ -2,6 +2,7 @@ import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
 import 'package:app/store/store.dart';
+import 'package:app/utils/MyDio.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:app/widgets/MyWidgets.dart';
