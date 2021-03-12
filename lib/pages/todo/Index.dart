@@ -1,5 +1,5 @@
+import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:app/widgets/MyWidgets.dart';
 
 class TodoPage extends StatefulWidget {
   TodoPage({Key? key}) : super(key: key);
@@ -13,7 +13,7 @@ class _TodoPageState extends State<TodoPage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: MyWidgets.getAppBar(title: '待办'),
+        appBar: MyAppBar.build(title: '待办'),
       ),
     );
   }

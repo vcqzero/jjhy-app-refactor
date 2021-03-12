@@ -3,8 +3,8 @@ import 'package:app/api/AuthApi.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyStorage.dart';
-import 'package:app/widgets/MyWidgets.dart';
-import 'package:dio/dio.dart';
+import 'package:app/widgets/MyAppBar.dart';
+import 'package:app/widgets/button/MyElevatedButton.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _LoginIndexState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyWidgets.getAppBar(
+      appBar: MyAppBar.build(
         title: '登录',
         hidden: true,
       ),

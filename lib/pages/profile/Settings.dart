@@ -1,4 +1,4 @@
-import 'package:app/widgets/MyWidgets.dart';
+import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -14,7 +14,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-        appBar: MyWidgets.getAppBar(title: '设置'),
+        appBar: MyAppBar.build(title: '设置'),
       ),
     );
   }

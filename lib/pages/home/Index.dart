@@ -3,9 +3,9 @@ import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
 import 'package:app/store/store.dart';
 import 'package:app/utils/MyDio.dart';
+import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:app/widgets/MyWidgets.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyWidgets.getAppBar(hidden: true),
+      appBar: MyAppBar.build(hidden: true, title: ''),
       body: Column(
         children: [
           Container(
