@@ -1,3 +1,4 @@
+import 'package:app/pages/login/TypeCodePage.dart';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/widgets/button/MyElevatedButton.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +25,13 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
     return Column(
       children: [
         TextField(
+          autofocus: false,
           keyboardType: TextInputType.phone,
           controller: _controller,
           onChanged: (val) {
-            setState(() {});
+            setState(() {
+              _showHelper = false;
+            });
           },
           decoration: InputDecoration(
             hintText: '手机号',
@@ -56,6 +60,14 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
                 _helperText = "请输入正确手机号";
               });
             }
+            // 进入输入验证码页面
+            Navigator.pushNamed(
+              context,
+              LoginTypeCodePage.routeName,
+              arguments: LoginTypeCodePageArguments(
+                phone: phone,
+              ),
+            );
           },
         )
       ],

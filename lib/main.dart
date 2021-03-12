@@ -1,4 +1,5 @@
 import 'package:app/pages/login/Index.dart';
+import 'package:app/pages/login/TypeCodePage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         SettingsPage.routeName: (context) => SettingsPage(),
         LoginPage.routeName: (context) => LoginPage(),
+        LoginTypeCodePage.routeName: (context) => LoginTypeCodePage(),
       },
     );
   }
