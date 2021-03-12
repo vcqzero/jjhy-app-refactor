@@ -1,3 +1,4 @@
+import 'package:app/utils/MyReg.dart';
 import 'package:app/widgets/button/MyElevatedButton.dart';
 import 'package:flutter/material.dart';
 
@@ -11,19 +12,26 @@ class ThePhoneSection extends StatefulWidget {
 class _ThePhoneSectionState extends State<ThePhoneSection> {
   TextEditingController _controller = TextEditingController();
   bool _showHelper = false;
+  String _helperText = '';
+
+  _getHelperText() {
+    if (!_showHelper || _helperText.isEmpty) return null;
+    return _helperText;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         TextField(
+          keyboardType: TextInputType.phone,
           controller: _controller,
           onChanged: (val) {
             setState(() {});
           },
           decoration: InputDecoration(
             hintText: '手机号',
-            helperText:
-                (_showHelper && _controller.text.isEmpty) ? '请输入手机号' : null,
+            helperText: _getHelperText(),
             prefixIcon: Icon(
               Icons.phone_android,
             ),
@@ -35,9 +43,17 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
         MyElevatedButton(
           label: '发送验证码',
           onPressed: () {
-            if (_controller.text.isEmpty) {
-              setState(() {
+            final String phone = _controller.text;
+            if (phone.isEmpty) {
+              return setState(() {
                 _showHelper = true;
+                _helperText = "请输入手机号";
+              });
+            }
+            if (!MyReg.isChinaPhoneLegal(phone)) {
+              return setState(() {
+                _showHelper = true;
+                _helperText = "请输入正确手机号";
               });
             }
           },
