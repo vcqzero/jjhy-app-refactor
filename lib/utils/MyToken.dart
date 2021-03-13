@@ -1,10 +1,10 @@
 import 'package:get_storage/get_storage.dart';
 
-const _TOKEN_KEY = 'token_key';
+final _storage = GetStorage();
 
-class MyStorage {
-  static final _storage = GetStorage();
+const _TOKEN_KEY = 'jjhy_app_auth_token_key';
 
+class MyToken {
   /// 写入token
   static Future<void> setToken(String token) {
     return _storage.write(_TOKEN_KEY, token);

@@ -1,4 +1,4 @@
-import 'package:app/utils/MyStorage.dart';
+import 'package:app/utils/MyToken.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
@@ -40,7 +40,7 @@ class MyDio {
       InterceptorsWrapper(
         onRequest: (RequestOptions options) async {
           // Do something before request is sent
-          String? token = MyStorage.getToken();
+          String? token = MyToken.getToken();
           if (token != null)
             options.headers['Authorization'] = 'Bearer ' + token;
           return options;
@@ -70,10 +70,12 @@ class MyDio {
       ),
     );
     // 请求日志
-    _instance.interceptors.add(LogInterceptor(
-      requestHeader: false,
-      responseHeader: false,
-      responseBody: true,
-    ));
+    if (!_inProduction) {
+      _instance.interceptors.add(LogInterceptor(
+        requestHeader: true,
+        responseHeader: false,
+        responseBody: true,
+      ));
+    }
   }
 }

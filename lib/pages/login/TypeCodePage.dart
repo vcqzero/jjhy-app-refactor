@@ -6,7 +6,7 @@ import 'package:app/service/AuthServe.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:app/utils/MyReg.dart';
-import 'package:app/utils/MyStorage.dart';
+import 'package:app/utils/MyToken.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';

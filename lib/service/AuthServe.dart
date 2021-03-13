@@ -1,7 +1,7 @@
-import 'package:app/utils/MyStorage.dart';
+import 'package:app/utils/MyToken.dart';
 
 class AuthServe {
   saveToken(String? token) async {
-    if (token != null) await MyStorage.setToken(token);
+    if (token != null) await MyToken.setToken(token);
   }
 }

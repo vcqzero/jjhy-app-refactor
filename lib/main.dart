@@ -1,6 +1,7 @@
 import 'package:app/pages/login/Index.dart';
 import 'package:app/utils/MyLoading.dart';
-import 'package:app/utils/MyStorage.dart';
+import 'package:app/utils/MyStore.dart';
+import 'package:app/utils/MyToken.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -22,6 +23,9 @@ void main() async {
   );
   // 配置loading
   MyLoading.config();
+  await MyStore().saveUser(User(id: 1, tel: 'tel', username: 'username'));
+  print('user info test');
+  print(MyStore().getUser());
 }
 
 class MyApp extends StatelessWidget {
