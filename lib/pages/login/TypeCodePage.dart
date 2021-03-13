@@ -2,20 +2,15 @@ import 'dart:async';
 import 'package:app/api/AuthApi.dart';
 import 'package:app/api/PhoneApi.dart';
 import 'package:app/main.dart';
+import 'package:app/service/AuthServe.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:app/utils/MyReg.dart';
+import 'package:app/utils/MyStorage.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
-import 'package:app/widgets/MyButton.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-
-class LoginTypeCodePageArguments {
-  /// 手机号码
-  String phone;
-  LoginTypeCodePageArguments({required this.phone});
-}
 
 class LoginTypeCodePage extends StatefulWidget {
   static String routeName = 'LoginTypeCodePage';
@@ -56,7 +51,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
   }
 
   /// 重新设置state
-  void _resetState({
+  void _handleResetState({
     required int delaySeconds,
     required int codeLen,
   }) {
@@ -87,9 +82,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     _resendTimer = Timer.periodic(duration, (timer) {
       setState(() {
         _resendDelaySeconds--;
-        if (_resendDelaySeconds <= 0) {
-          timer.cancel();
-        }
+        if (_resendDelaySeconds <= 0) timer.cancel();
       });
     });
   }
@@ -101,7 +94,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     super.dispose();
   }
 
-  _authByCode({required String code, context}) {
+  _handleAuthByCode({required String code}) async {
     if (_authLoging) return;
     // start loading
     _authLoging = true;
@@ -111,124 +104,81 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     MyResponse res = AuthApi.authByCode(phone: widget.phone, code: code);
     final future = res.future;
     _cancelToken = res.cancelToken;
-    future.then((res) {
+    try {
+      final data = await future.then((value) => value.data);
+      String? token = data['token'];
+      await AuthServe().saveToken(token);
       MyToast.show('登录成功');
-      // 返回/
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
-    }).catchError((err) {
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) return;
       MyToast.show('手机号或验证码错误');
-      // 返回上一页
       Navigator.of(context).pop();
-    }).whenComplete(() {
+    } finally {
       // hide loading
       _authLoging = false;
       MyLoading.dismiss();
-    });
+    }
   }
 
-  GestureDetector _renderResendButton() {
-    return GestureDetector(
-      child: Text(
-        '重新发送',
-        style: TextStyle(color: Colors.blue),
-      ),
-      onTap: () {
-        if (_resondLoading) return print('重新发送');
-        MyResponse res = PhoneApi.sendCode(phone: widget.phone);
-        _cancelToken = res.cancelToken;
-        // loading
-        _resondLoading = true;
-        MyLoading.showLoading('发送中...');
-        res.future.then(
-          (res) {
-            int codeCount = res.data['codeCount'];
-            int delaySeconds = res.data['delaySeconds'];
-            _resetState(codeLen: codeCount, delaySeconds: delaySeconds);
-          },
-        ).catchError(
-          (err) {
-            DioErrorType type = (err as DioError).type;
-            if (type == DioErrorType.cancel) return;
-            MyToast.show('网络错误，请稍后重试');
-          },
-        ).whenComplete(() {
-          _resondLoading = false;
-          MyLoading.dismiss();
-          MyLoading.success('发送成功');
-        });
-      },
-    );
+  _handleResendCode() async {
+    try {
+      if (_resondLoading) return;
+      MyResponse res = PhoneApi.sendCode(phone: widget.phone);
+      _cancelToken = res.cancelToken;
+
+      // loading
+      _resondLoading = true;
+      MyLoading.showLoading('发送中...');
+      final data = await res.future.then((value) => value.data);
+      int codeCount = data['codeCount'];
+      int delaySeconds = data['delaySeconds'];
+      _handleResetState(codeLen: codeCount, delaySeconds: delaySeconds);
+
+      // loading
+      MyLoading.dismiss();
+      MyLoading.success('发送成功');
+    } on DioError catch (e) {
+      MyLoading.dismiss();
+      if (e.type == DioErrorType.cancel) return;
+      MyToast.show('网络错误，请稍后重试');
+    } finally {
+      _resondLoading = false;
+    }
   }
 
-  Container _renderTextFiled() {
-    return Container(
-      padding: EdgeInsets.only(left: 15),
-      child: TextField(
-        focusNode: _focusNode,
-        toolbarOptions: const ToolbarOptions(),
-        showCursor: false,
-        keyboardType: TextInputType.number,
-        onChanged: (String val) {
-          val = val.replaceAll(RegExp(r'[^\d]'), '');
-          if (val.length > _codeLen || _code == val) return;
-          setState(() {
-            _code = val;
-            // 是否输入完成
-            if (_code.length >= _codeLen) {
-              print('输入完成');
-              _focusNode.unfocus();
-              // 发送请求
-              _authByCode(code: _code, context: context);
-            }
-          });
-        },
-        style: TextStyle(fontSize: 0),
-        autofocus: true,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-        ),
-      ),
-    );
+  _handleTextFiledChange(String val) {
+    val = val.replaceAll(RegExp(r'[^\d]'), '');
+    if (val.length > _codeLen || _code == val) return;
+    setState(() => {_code = val});
+    if (val.length < _codeLen) return;
+    print('输入完成');
+    _focusNode.unfocus();
+    _handleAuthByCode(code: val);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar.build(
-        title: '输入验证码',
-      ),
+      appBar: MyAppBar.build(title: '输入验证码'),
       body: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
           children: [
-            SizedBox(
-              height: 20,
-            ),
+            SizedBox(height: 20),
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  '验证码已发送至：',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
+                Text('验证码已发送至：', style: TextStyle(color: Colors.grey)),
+                SizedBox(width: 5),
                 Text(
                   _phoneSafety,
-                  style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 28,
-                  ),
+                  style: TextStyle(color: Colors.grey[700], fontSize: 28),
                 ),
               ],
             ),
-            SizedBox(
-              height: 30,
-            ),
+            SizedBox(height: 30),
             Stack(
               children: [
                 Row(
@@ -237,27 +187,35 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
                       : MainAxisAlignment.spaceEvenly,
                   children: _getCodeBoxes(),
                 ),
-                _renderTextFiled(),
+                TextField(
+                  focusNode: _focusNode,
+                  toolbarOptions: const ToolbarOptions(),
+                  showCursor: false,
+                  keyboardType: TextInputType.number,
+                  onChanged: _handleTextFiledChange,
+                  style: TextStyle(fontSize: 0),
+                  autofocus: true,
+                  decoration: InputDecoration(border: InputBorder.none),
+                )
               ],
             ),
-            SizedBox(
-              height: 15,
-            ),
+            SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  '请输入验证码',
-                  style: TextStyle(color: Colors.grey.shade500),
-                ),
+                Text('请输入验证码', style: TextStyle(color: Colors.grey.shade500)),
                 Container(
                   child: _resendDelaySeconds > 0
                       ? Text(
                           '${_resendDelaySeconds.toString()}秒后重新发送',
                           style: TextStyle(color: Colors.grey.shade500),
                         )
-                      : _renderResendButton(),
+                      : GestureDetector(
+                          child: Text('重新发送',
+                              style: TextStyle(color: Colors.blue)),
+                          onTap: _handleResendCode,
+                        ),
                 ),
               ],
             ),
@@ -292,10 +250,7 @@ class _TheCodeBox extends StatelessWidget {
       ),
       child: Text(
         MyReg.isNumber(number) ? number : '',
-        style: TextStyle(
-          fontSize: 25,
-          // color: Colors.blueGrey,
-        ),
+        style: TextStyle(fontSize: 25),
       ),
     );
   }

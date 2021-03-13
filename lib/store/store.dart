@@ -29,10 +29,6 @@ class _AppState {
 // Define your Actions
 class ClearUserAction {}
 
-class PerformSearchAction {
-  String? query;
-}
-
 User _userReducer(User user, action) {
   if (action is ClearUserAction) {
     return _defaultUser;

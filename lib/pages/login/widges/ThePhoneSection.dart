@@ -6,7 +6,6 @@ import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyButton.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class ThePhoneSection extends StatefulWidget {
   ThePhoneSection({Key? key}) : super(key: key);
@@ -34,6 +33,54 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
     super.dispose();
   }
 
+  bool _handleValidPhone(String phone) {
+    if (phone.isEmpty) {
+      setState(() {
+        _showHelper = true;
+        _helperText = "请输入手机号";
+      });
+      return false;
+    }
+    if (!MyReg.isChinaPhoneLegal(phone)) {
+      setState(() {
+        _showHelper = true;
+        _helperText = "请输入正确手机号";
+      });
+      return false;
+    }
+    return true;
+  }
+
+  /// 发送验证码
+  _handleSendCode(String phone) async {
+    // start loading
+    setState(() => {_loading = true});
+
+    MyResponse res = PhoneApi.sendCode(phone: phone);
+    cancelToken = res.cancelToken;
+    try {
+      final data = await res.future.then((value) => value.data);
+      int codeCount = data['codeCount'];
+      int delaySeconds = data['delaySeconds'];
+      // 进入输入验证码页面
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginTypeCodePage(
+            phone: phone,
+            delaySeconds: delaySeconds,
+            codeLen: codeCount,
+          ),
+        ),
+      );
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) return;
+      MyToast.show('网络错误，请稍后重试');
+    } finally {
+      if (mounted) setState(() => {_loading = false});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -44,75 +91,23 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
           controller: _controller,
           focusNode: _focusNode,
           onChanged: (val) {
-            setState(() {
-              _showHelper = false;
-            });
+            setState(() => {_showHelper = false});
           },
           decoration: InputDecoration(
             hintText: '手机号',
             helperText: _getHelperText(),
-            prefixIcon: Icon(
-              Icons.phone_android,
-            ),
+            prefixIcon: Icon(Icons.phone_android),
           ),
         ),
-        SizedBox(
-          height: 15,
-        ),
+        SizedBox(height: 15),
         MyButton.elevated(
           loading: _loading,
           label: '发送验证码',
           onPressed: () async {
             final String phone = _controller.text;
-            if (phone.isEmpty) {
-              return setState(() {
-                _showHelper = true;
-                _helperText = "请输入手机号";
-              });
-            }
-            if (!MyReg.isChinaPhoneLegal(phone)) {
-              return setState(() {
-                _showHelper = true;
-                _helperText = "请输入正确手机号";
-              });
-            }
-            // 验证正确
+            if (!_handleValidPhone(phone)) return;
             _focusNode.unfocus(); // 关闭键盘
-            // 请求接口
-            MyResponse res = PhoneApi.sendCode(phone: phone);
-            cancelToken = res.cancelToken;
-            setState(() {
-              _loading = true;
-            });
-            res.future.then(
-              (res) {
-                int codeCount = res.data['codeCount'];
-                int delaySeconds = res.data['delaySeconds'];
-                // 进入输入验证码页面
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginTypeCodePage(
-                      phone: phone,
-                      delaySeconds: delaySeconds,
-                      codeLen: codeCount,
-                    ),
-                  ),
-                );
-              },
-            ).catchError(
-              (err) {
-                DioErrorType type = (err as DioError).type;
-                if (type == DioErrorType.cancel) return;
-                MyToast.show('网络错误，请稍后重试');
-              },
-            ).whenComplete(() {
-              if (mounted) {
-                setState(() {
-                  _loading = false;
-                });
-              }
-            });
+            _handleSendCode(phone);
           },
         )
       ],

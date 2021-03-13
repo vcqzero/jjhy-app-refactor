@@ -6,13 +6,13 @@ class MyStorage {
   static final _storage = GetStorage();
 
   /// 写入token
-  static void setToken(String token) {
-    _storage.write(_TOKEN_KEY, token);
+  static Future<void> setToken(String token) {
+    return _storage.write(_TOKEN_KEY, token);
   }
 
   /// 读取token
-  static String? getToken(String token) {
-    _storage.read<String>(_TOKEN_KEY);
+  static String? getToken() {
+    return _storage.read<String>(_TOKEN_KEY);
   }
 
   /// 清空token
