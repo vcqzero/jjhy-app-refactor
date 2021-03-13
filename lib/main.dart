@@ -1,8 +1,9 @@
 import 'package:app/pages/login/Index.dart';
-import 'package:app/pages/login/TypeCodePage.dart';
+import 'package:app/utils/MyLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
 import 'pages/home/Index.dart';
@@ -18,6 +19,8 @@ void main() async {
       DeviceOrientation.portraitUp, // 禁止横屏
     ],
   );
+  // 配置loading
+  MyLoading.config();
 }
 
 class MyApp extends StatelessWidget {
@@ -40,9 +43,11 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MainPage(),
-      // initialRoute: MainPage.routeName,
+      // home: MainPage(),
+      initialRoute: MainPage.routeName,
+      builder: EasyLoading.init(),
       routes: {
+        MainPage.routeName: (context) => MainPage(),
         SettingsPage.routeName: (context) => SettingsPage(),
         LoginPage.routeName: (context) => LoginPage(),
       },
@@ -51,8 +56,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MainPage extends StatefulWidget {
+  static String routeName = '/';
   MainPage({Key? key}) : super(key: key);
-
   @override
   _MainPageState createState() => _MainPageState();
 }

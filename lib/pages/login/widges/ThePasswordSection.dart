@@ -1,7 +1,7 @@
 import 'package:app/api/AuthApi.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyStorage.dart';
-import 'package:app/widgets/button/MyElevatedButton.dart';
+import 'package:app/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 
 class ThePasswordSection extends StatefulWidget {
@@ -74,7 +74,7 @@ class ThePasswordSectionState extends State<ThePasswordSection> {
         SizedBox(
           height: 15,
         ),
-        MyElevatedButton(
+        MyButton.elevated(
           label: '立即登录',
           onPressed: () {
             String username = _usernameController.text;

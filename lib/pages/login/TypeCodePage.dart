@@ -1,6 +1,14 @@
 import 'dart:async';
+import 'package:app/api/AuthApi.dart';
+import 'package:app/api/PhoneApi.dart';
+import 'package:app/main.dart';
+import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyLoading.dart';
 import 'package:app/utils/MyReg.dart';
+import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
+import 'package:app/widgets/MyButton.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class LoginTypeCodePageArguments {
@@ -33,6 +41,10 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
   late String _phoneSafety;
   late Timer _resendTimer;
   late int _codeLen;
+  bool _resondLoading = false;
+  CancelToken? _cancelToken;
+  FocusNode _focusNode = FocusNode();
+  bool _authLoging = false;
 
   @override
   void initState() {
@@ -85,7 +97,98 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
   @override
   void dispose() {
     if (_resendTimer.isActive) _resendTimer.cancel();
+    if (_cancelToken != null) _cancelToken!.cancel();
     super.dispose();
+  }
+
+  _authByCode({required String code, context}) {
+    if (_authLoging) return;
+    // start loading
+    _authLoging = true;
+    MyLoading.showLoading("登录中...");
+
+    // api
+    MyResponse res = AuthApi.authByCode(phone: widget.phone, code: code);
+    final future = res.future;
+    _cancelToken = res.cancelToken;
+    future.then((res) {
+      MyToast.show('登录成功');
+      // 返回/
+      Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
+    }).catchError((err) {
+      MyToast.show('手机号或验证码错误');
+      // 返回上一页
+      Navigator.of(context).pop();
+    }).whenComplete(() {
+      // hide loading
+      _authLoging = false;
+      MyLoading.dismiss();
+    });
+  }
+
+  GestureDetector _renderResendButton() {
+    return GestureDetector(
+      child: Text(
+        '重新发送',
+        style: TextStyle(color: Colors.blue),
+      ),
+      onTap: () {
+        if (_resondLoading) return print('重新发送');
+        MyResponse res = PhoneApi.sendCode(phone: widget.phone);
+        _cancelToken = res.cancelToken;
+        // loading
+        _resondLoading = true;
+        MyLoading.showLoading('发送中...');
+        res.future.then(
+          (res) {
+            int codeCount = res.data['codeCount'];
+            int delaySeconds = res.data['delaySeconds'];
+            _resetState(codeLen: codeCount, delaySeconds: delaySeconds);
+          },
+        ).catchError(
+          (err) {
+            DioErrorType type = (err as DioError).type;
+            if (type == DioErrorType.cancel) return;
+            MyToast.show('网络错误，请稍后重试');
+          },
+        ).whenComplete(() {
+          _resondLoading = false;
+          MyLoading.dismiss();
+          MyLoading.success('发送成功');
+        });
+      },
+    );
+  }
+
+  Container _renderTextFiled() {
+    return Container(
+      padding: EdgeInsets.only(left: 15),
+      child: TextField(
+        focusNode: _focusNode,
+        toolbarOptions: const ToolbarOptions(),
+        showCursor: false,
+        keyboardType: TextInputType.number,
+        onChanged: (String val) {
+          val = val.replaceAll(RegExp(r'[^\d]'), '');
+          if (val.length > _codeLen || _code == val) return;
+          setState(() {
+            _code = val;
+            // 是否输入完成
+            if (_code.length >= _codeLen) {
+              print('输入完成');
+              _focusNode.unfocus();
+              // 发送请求
+              _authByCode(code: _code, context: context);
+            }
+          });
+        },
+        style: TextStyle(fontSize: 0),
+        autofocus: true,
+        decoration: InputDecoration(
+          border: InputBorder.none,
+        ),
+      ),
+    );
   }
 
   @override
@@ -131,30 +234,10 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
                 Row(
                   mainAxisAlignment: _codeLen > 4
                       ? MainAxisAlignment.spaceBetween
-                      : MainAxisAlignment.spaceAround,
+                      : MainAxisAlignment.spaceEvenly,
                   children: _getCodeBoxes(),
                 ),
-                TextField(
-                  showCursor: false,
-                  keyboardType: TextInputType.number,
-                  onChanged: (String val) {
-                    val = val.replaceAll(RegExp(r'[^\d]'), '');
-                    if (val.length > _codeLen) return;
-                    if (_code == val) return;
-                    setState(() {
-                      _code = val;
-                      // 是否输入完成
-                      if (_code.length == _codeLen) {
-                        print('输入完成');
-                      }
-                    });
-                  },
-                  style: TextStyle(fontSize: 0),
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                  ),
-                ),
+                _renderTextFiled(),
               ],
             ),
             SizedBox(
@@ -162,6 +245,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   '请输入验证码',
@@ -173,19 +257,10 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
                           '${_resendDelaySeconds.toString()}秒后重新发送',
                           style: TextStyle(color: Colors.grey.shade500),
                         )
-                      : GestureDetector(
-                          onTap: () {
-                            print('重新发送');
-                            _resetState(codeLen: 4, delaySeconds: 10);
-                          },
-                          child: Text(
-                            '重新发送',
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                        ),
+                      : _renderResendButton(),
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
