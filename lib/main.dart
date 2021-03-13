@@ -11,12 +11,13 @@ import './pages/profile/Index.dart';
 import './pages/profile/Settings.dart';
 
 void main() async {
-  await GetStorage.init();
+  await GetStorage.init(); // 初始化storage
   runApp(MyApp());
-  // 定义状态栏
-
-  // 禁止横屏
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setPreferredOrientations(
+    [
+      DeviceOrientation.portraitUp, // 禁止横屏
+    ],
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -44,7 +45,6 @@ class MyApp extends StatelessWidget {
       routes: {
         SettingsPage.routeName: (context) => SettingsPage(),
         LoginPage.routeName: (context) => LoginPage(),
-        LoginTypeCodePage.routeName: (context) => LoginTypeCodePage(),
       },
     );
   }

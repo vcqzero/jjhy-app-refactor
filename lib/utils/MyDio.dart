@@ -1,5 +1,9 @@
 import 'package:dio/dio.dart';
 
+const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
+const String _baseUrlProd = 'https://api.jjhycom.cn';
+const String _baseUrlDev = 'http://192.168.0.117:3000';
+
 class MyResponse {
   Future<Response> future;
   CancelToken? cancelToken;
@@ -7,7 +11,8 @@ class MyResponse {
 }
 
 class MyDio {
-  static const baseUrl = 'https://api.jjhycom.cn/api';
+  static const baseUrl =
+      _inProduction ? _baseUrlProd + '/api' : _baseUrlDev + '/api';
   static bool _inited = false;
   static Dio _instance = Dio();
   static Dio getInstance() {

@@ -61,11 +61,14 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
               });
             }
             // 进入输入验证码页面
-            Navigator.pushNamed(
+            Navigator.push(
               context,
-              LoginTypeCodePage.routeName,
-              arguments: LoginTypeCodePageArguments(
-                phone: phone,
+              MaterialPageRoute(
+                builder: (context) => LoginTypeCodePage(
+                  phone: phone,
+                  delaySeconds: 10,
+                  codeLen: 6,
+                ),
               ),
             );
           },

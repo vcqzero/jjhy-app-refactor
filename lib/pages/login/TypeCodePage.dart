@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
@@ -10,36 +11,85 @@ class LoginTypeCodePageArguments {
 
 class LoginTypeCodePage extends StatefulWidget {
   static String routeName = 'LoginTypeCodePage';
-  LoginTypeCodePage({Key? key}) : super(key: key);
+
+  final String phone; // 手机号
+  final int delaySeconds; // 再次发送需延长时间
+  final int codeLen; // 验证码位数
+
+  LoginTypeCodePage({
+    Key? key,
+    required this.phone,
+    required this.delaySeconds,
+    required this.codeLen,
+  }) : super(key: key);
 
   @override
   _LoginTypeCodePage createState() => _LoginTypeCodePage();
 }
 
 class _LoginTypeCodePage extends State<LoginTypeCodePage> {
-  String code = ''; // 保存输入的验证码
-  _toSafety(String phone) {
+  String _code = ''; // 保存输入的验证码
+  late int _resendDelaySeconds; // 重新发送剩余时间 秒
+  late String _phoneSafety;
+  late Timer _resendTimer;
+  late int _codeLen;
+
+  @override
+  void initState() {
+    _phoneSafety = _toSafety(widget.phone);
+    _resendDelaySeconds = widget.delaySeconds;
+    _codeLen = widget.codeLen;
+    _startResendTimer();
+    super.initState();
+  }
+
+  /// 重新设置state
+  void _resetState({
+    required int delaySeconds,
+    required int codeLen,
+  }) {
+    _resendDelaySeconds = delaySeconds;
+    _codeLen = codeLen;
+    if (_resendTimer.isActive) _resendTimer.cancel();
+    _startResendTimer();
+  }
+
+  String _toSafety(String phone) {
+    if (phone.length < 4) return '';
     return phone.replaceRange(3, 7, '****');
   }
 
-  _getCodeBoxes() {
-    const count = 6;
-    List<String> codeList = code.split('');
+  List<Widget> _getCodeBoxes() {
+    List<String> codeList = _code.split('');
     List<Widget> boxes = [];
     int len = codeList.length;
-    for (var i = 0; i < count; i++) {
+    for (var i = 0; i < _codeLen; i++) {
       final number = len - 1 >= i ? codeList[i] : '';
       boxes.add(_TheCodeBox(number: number));
     }
     return boxes;
   }
 
+  void _startResendTimer() {
+    const duration = Duration(seconds: 1);
+    _resendTimer = Timer.periodic(duration, (timer) {
+      setState(() {
+        _resendDelaySeconds--;
+        if (_resendDelaySeconds <= 0) {
+          timer.cancel();
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    if (_resendTimer.isActive) _resendTimer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    LoginTypeCodePageArguments argus = ModalRoute.of(context)!
-        .settings
-        .arguments as LoginTypeCodePageArguments;
-    final phone = _toSafety(argus.phone);
     return Scaffold(
       appBar: MyAppBar.build(
         title: '输入验证码',
@@ -65,7 +115,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
                   width: 5,
                 ),
                 Text(
-                  phone,
+                  _phoneSafety,
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 28,
@@ -79,15 +129,24 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
             Stack(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: _codeLen > 4
+                      ? MainAxisAlignment.spaceBetween
+                      : MainAxisAlignment.spaceAround,
                   children: _getCodeBoxes(),
                 ),
                 TextField(
                   showCursor: false,
                   keyboardType: TextInputType.number,
                   onChanged: (String val) {
+                    val = val.replaceAll(RegExp(r'[^\d]'), '');
+                    if (val.length > _codeLen) return;
+                    if (_code == val) return;
                     setState(() {
-                      code = val.replaceAll(RegExp(r'[^\d]'), '');
+                      _code = val;
+                      // 是否输入完成
+                      if (_code.length == _codeLen) {
+                        print('输入完成');
+                      }
                     });
                   },
                   style: TextStyle(fontSize: 0),
@@ -98,7 +157,35 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
                 ),
               ],
             ),
-            // 隐藏的textFiled
+            SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '请输入验证码',
+                  style: TextStyle(color: Colors.grey.shade500),
+                ),
+                Container(
+                  child: _resendDelaySeconds > 0
+                      ? Text(
+                          '${_resendDelaySeconds.toString()}秒后重新发送',
+                          style: TextStyle(color: Colors.grey.shade500),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            print('重新发送');
+                            _resetState(codeLen: 4, delaySeconds: 10);
+                          },
+                          child: Text(
+                            '重新发送',
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                ),
+              ],
+            )
           ],
         ),
       ),
