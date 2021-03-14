@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
+import 'package:app/store/LoginFormStore.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/widgets/MyAppBar.dart';
@@ -20,13 +23,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _handleQueryBanner();
-    _handleInitUser();
     super.initState();
+    _handleQueryBanner();
   }
 
-  _handleInitUser() {
-    User user = User.build();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   void _handleQueryBanner() async {

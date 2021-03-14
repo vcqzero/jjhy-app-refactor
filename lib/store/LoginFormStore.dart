@@ -1,31 +1,31 @@
-import 'package:get_storage/get_storage.dart';
+import 'package:get_storage/get_storage.dart' show GetStorage;
 
-GetStorage _getBox() => GetStorage('LoginFormStore');
+GetStorage _box = GetStorage();
 
 class LoginFormStore {
-  static String storageKey = 'loginForm';
-
-  late ReadWriteValue<String?> _usernameVal;
-  late ReadWriteValue<String?> _phoneVal;
-
+  static const String _usernameKey = 'storage_key_login_username';
+  static const String _phoneKey = 'storage_key_login_phone';
   String? get username {
-    return _usernameVal.val;
+    return _box.read<String>(_usernameKey);
   }
 
   String? get phone {
-    return _phoneVal.val;
+    return _box.read<String>(_phoneKey);
   }
 
-  set username(String? val) {
-    _usernameVal.val = val;
+  Future<void> saveUsername(String val) async {
+    try {
+      await _box.write(_usernameKey, val);
+    } catch (e) {
+      print(e);
+    }
   }
 
-  set phone(String? val) {
-    _phoneVal.val = val;
-  }
-
-  LoginFormStore() {
-    _usernameVal = ReadWriteValue<String?>('username', null, _getBox);
-    _phoneVal = ReadWriteValue<String?>('phone', null, _getBox);
+  Future<void> savePhone(String val) async {
+    try {
+      await _box.write(_phoneKey, val);
+    } catch (e) {
+      print(e);
+    }
   }
 }

@@ -1,9 +1,9 @@
 import 'package:get_storage/get_storage.dart';
 
-GetStorage _getBox() => GetStorage('TokenStore');
+GetStorage _getBox() => GetStorage();
 
 class Token {
-  static String storageKey = 'token';
+  static String storageKey = 'storage_key_token';
 
   /// 获取token
   String? get val {

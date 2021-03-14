@@ -2,15 +2,11 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:get_storage/get_storage.dart';
 
-GetStorage _getBox() => GetStorage('userStorage');
+GetStorage _getBox() => GetStorage();
 
 class User {
   /// 定义之后不可修改，
-  static String storageKey = 'user';
-  GetStorage get storageBox {
-    return _getBox();
-  }
-
+  static String _storageKey = 'storage_key_user';
   // basic info
   int? id;
   String? username;
@@ -41,7 +37,7 @@ class User {
   static Future<void> store(Map? userMap) async {
     String userJson = jsonEncode(userMap);
     try {
-      await _getBox().write(storageKey, userJson);
+      await _getBox().write(_storageKey, userJson);
       print('保存user success');
     } catch (e) {
       print('保存user 数据出错');
@@ -53,7 +49,7 @@ class User {
   User.build() {
     Map map = {};
     try {
-      String? mapJson = _getBox().read(storageKey);
+      String? mapJson = _getBox().read(_storageKey);
       if (mapJson != null) map = jsonDecode(mapJson);
 
       _setBasicInfo(map);

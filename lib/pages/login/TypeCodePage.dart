@@ -115,7 +115,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
       // 写入storage
-      LoginFormStore().phone = phone;
+      LoginFormStore().savePhone(phone);
     } on DioError catch (e) {
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('手机号或验证码错误');

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:app/api/AuthApi.dart';
 import 'package:app/main.dart';
 import 'package:app/store/LoginFormStore.dart';
@@ -43,7 +45,7 @@ class ThePasswordSectionState extends State<ThePasswordSection> {
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
       // 将username写入storage
-      LoginFormStore().username = username;
+      LoginFormStore().saveUsername(username);
     } on DioError catch (e) {
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('用户名或密码错误，请重试');
@@ -62,6 +64,8 @@ class ThePasswordSectionState extends State<ThePasswordSection> {
   void initState() {
     // 读取上次登录的用户名
     String? username = LoginFormStore().username;
+    log('initState username');
+    log(username ?? '未获取到');
     if (username != null) _usernameController.text = username;
     super.initState();
   }

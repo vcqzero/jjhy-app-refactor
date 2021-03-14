@@ -34,7 +34,6 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
 
   @override
   void didPopNext() {
-    debugPrint("------> didPopNext");
     setState(() => user = User.build());
     super.didPopNext();
   }

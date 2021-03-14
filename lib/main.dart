@@ -21,9 +21,6 @@ void main() async {
   );
   // 配置loading
   MyLoading.config();
-  // await MyStore().saveUser({'id': 1, 'tel': '2', 'username': 'sss'});
-  // print('user info test');
-  // print(MyStore().getUser().id);
 }
 
 final RouteObserver routeObserver = RouteObserver();
