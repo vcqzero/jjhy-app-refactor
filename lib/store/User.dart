@@ -33,7 +33,7 @@ class User {
   List? jpushDevices;
 
   /// 将user map数据保存到storage中
-  static Future<void> saveStorage(Map? userMap) async {
+  static Future<void> store(Map? userMap) async {
     String userJson = jsonEncode(userMap);
     try {
       await _storage.write(storageKey, userJson);
@@ -45,7 +45,7 @@ class User {
   }
 
   /// 从storage读取数据
-  User.readStorage() {
+  User.build() {
     Map map = {};
     try {
       map = jsonDecode(_storage.read(storageKey)) ?? {};

@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   _handleInitUser() {
-    User user = User.readStorage();
+    User user = User.build();
     print('user');
     print(user.roles);
   }

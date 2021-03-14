@@ -40,7 +40,7 @@ class MyDio {
       InterceptorsWrapper(
         onRequest: (RequestOptions options) async {
           // Do something before request is sent
-          String? token = Token.getToken();
+          String? token = Token().val;
           if (token != null)
             options.headers['Authorization'] = 'Bearer ' + token;
           return options;

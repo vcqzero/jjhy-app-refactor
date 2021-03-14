@@ -37,8 +37,8 @@ class ThePasswordSectionState extends State<ThePasswordSection> {
       _cancelToken = res.cancelToken;
       Map data = await res.future.then((value) => value.data);
       // 登录成功后操作
-      await Token.saveToken(data['token']); // save token
-      await User.saveStorage(data['user']);
+      await Token().store(data['token']); // save token
+      await User.store(data['user']);
       // 返回
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));

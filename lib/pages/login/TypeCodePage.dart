@@ -109,8 +109,8 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     try {
       final data = await future.then((value) => value.data);
       // 登录成功后操作
-      await Token.saveToken(data['token']); // save token
-      await User.saveStorage(data['user']);
+      await Token().store(data['token']); // save token
+      await User.store(data['user']);
       // 返回
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
