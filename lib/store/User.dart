@@ -7,6 +7,10 @@ GetStorage _getBox() => GetStorage('userStorage');
 class User {
   /// 定义之后不可修改，
   static String storageKey = 'user';
+  GetStorage get storageBox {
+    return _getBox();
+  }
+
   // basic info
   int? id;
   String? username;
@@ -93,14 +97,14 @@ class User {
     // Map? workyard;
     // List? workyards;
     workyardId = map['workyard_id'];
-    workyard = map['belong_workyard'];
+    workyard = map['workyard'];
     workyards = map['workyards'];
   }
 
   _setCompany(Map map) {
     // Map? company;
     // int? companyId;
-    company = map['belong_company'];
+    company = map['company'];
     companyId = map['company_id'];
   }
 

@@ -27,8 +27,6 @@ class _HomePageState extends State<HomePage> {
 
   _handleInitUser() {
     User user = User.build();
-    print('user');
-    print(user.roles);
   }
 
   void _handleQueryBanner() async {
@@ -55,8 +53,11 @@ class _HomePageState extends State<HomePage> {
       appBar: MyAppBar.build(hidden: true, title: ''),
       body: Column(
         children: [
+          // 顶部banner
           Container(
-              child: _renderBannerImage(), margin: EdgeInsets.only(bottom: 10)),
+            child: _renderBannerImage(),
+            margin: EdgeInsets.only(bottom: 10),
+          ),
           Expanded(
             flex: 1,
             child: GridView.count(

@@ -26,6 +26,8 @@ void main() async {
   // print(MyStore().getUser().id);
 }
 
+final RouteObserver routeObserver = RouteObserver();
+
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
@@ -49,6 +51,7 @@ class MyApp extends StatelessWidget {
       // home: MainPage(),
       initialRoute: MainPage.routeName,
       builder: EasyLoading.init(),
+      navigatorObservers: [routeObserver],
       routes: {
         MainPage.routeName: (context) => MainPage(),
         SettingsPage.routeName: (context) => SettingsPage(),
