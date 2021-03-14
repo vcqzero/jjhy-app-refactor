@@ -1,7 +1,7 @@
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
-import 'package:app/store/store.dart';
+import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
@@ -17,47 +17,46 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? imageUrl;
   CancelToken? cancelToken;
+
   @override
   void initState() {
+    _handleQueryBanner();
+    _handleInitUser();
     super.initState();
-    _queryBanner();
-    print(store.state.user.id);
   }
 
-  void _queryBanner() {
-    final MyResponse res = AppSetings.getBanners();
-    cancelToken = res.cancelToken;
-    res.future.then((response) {
-      final String? imgUrl = response.data?['items']?[0]?['url'];
-      if (imgUrl != null) {
-        setState(() {
-          imageUrl = imgUrl;
-        });
-      }
-    }).catchError((onError) {
-      print(onError);
-    });
+  _handleInitUser() {
+    User user = User.readStorage();
+    print('user');
+    print(user.roles);
+  }
+
+  void _handleQueryBanner() async {
+    try {
+      MyResponse res = AppSetings.getBanners();
+      cancelToken = res.cancelToken;
+      String? imgUrl = await res.future.then((r) => r.data['items'][0]['url']);
+      if (imgUrl != null) setState(() => {imageUrl = imgUrl});
+    } on DioError catch (e) {
+      print(e);
+    }
   }
 
   /// 加载banner
-  Widget _getBannerImageWidget() {
-    if (imageUrl == null) {
-      return Image.asset(ImageAssets.defaultBannerImage);
-    } else {
-      return Image.network(imageUrl!);
-    }
+  Widget _renderBannerImage() {
+    if (imageUrl == null) return Image.asset(ImageAssets.defaultBannerImage);
+    return Image.network(imageUrl!);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       appBar: MyAppBar.build(hidden: true, title: ''),
       body: Column(
         children: [
           Container(
-            child: _getBannerImageWidget(),
-            margin: EdgeInsets.only(bottom: 10),
-          ),
+              child: _renderBannerImage(), margin: EdgeInsets.only(bottom: 10)),
           Expanded(
             flex: 1,
             child: GridView.count(
@@ -67,22 +66,19 @@ class _HomePageState extends State<HomePage> {
                   icon: Icons.wifi,
                   lable: '答题上网',
                   color: Colors.pink[400],
-                ),
+                )
               ],
             ),
           )
         ],
       ),
-      backgroundColor: Colors.grey[100],
     );
   }
 
   @override
   void dispose() {
     // 取消网络请求
-    if (cancelToken != null) {
-      cancelToken!.cancel();
-    }
+    if (cancelToken != null && mounted) cancelToken!.cancel();
     super.dispose();
   }
 }

@@ -2,11 +2,11 @@ import 'dart:async';
 import 'package:app/api/AuthApi.dart';
 import 'package:app/api/PhoneApi.dart';
 import 'package:app/main.dart';
-import 'package:app/service/AuthServe.dart';
+import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:app/utils/MyReg.dart';
-import 'package:app/utils/MyToken.dart';
+import 'package:app/store/Token.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
@@ -106,8 +106,10 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     _cancelToken = res.cancelToken;
     try {
       final data = await future.then((value) => value.data);
-      String? token = data['token'];
-      await AuthServe().saveToken(token);
+      // 登录成功后操作
+      await Token.saveToken(data['token']); // save token
+      await User.saveStorage(data['user']);
+      // 返回
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
     } on DioError catch (e) {

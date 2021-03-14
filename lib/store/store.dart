@@ -1,6 +1,6 @@
 import 'package:redux/redux.dart';
 
-class User {
+class UserInRedux {
   int id;
   String username;
   String tel;
@@ -8,7 +8,7 @@ class User {
   Map? workyard;
   Map? jpush;
   List? workyards;
-  User({
+  UserInRedux({
     required this.id,
     required this.tel,
     required this.username,
@@ -19,17 +19,17 @@ class User {
   });
 }
 
-final _defaultUser = User(id: 0, tel: '', username: '');
+final _defaultUser = UserInRedux(id: 0, tel: '', username: '');
 
 class _AppState {
-  User user;
+  UserInRedux user;
   _AppState({required this.user});
 }
 
 // Define your Actions
 class ClearUserAction {}
 
-User _userReducer(User user, action) {
+UserInRedux _userReducer(UserInRedux user, action) {
   if (action is ClearUserAction) {
     return _defaultUser;
   } else {

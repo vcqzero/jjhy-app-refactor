@@ -1,6 +1,6 @@
 import 'package:app/api/AuthApi.dart';
 import 'package:app/utils/MyDio.dart';
-import 'package:app/utils/MyToken.dart';
+import 'package:app/store/Token.dart';
 import 'package:app/widgets/MyButton.dart';
 import 'package:flutter/material.dart';
 
@@ -90,7 +90,7 @@ class ThePasswordSectionState extends State<ThePasswordSection> {
               password: password,
             );
             res.future.then((res) {
-              MyToken.setToken(res.data['token']);
+              Token.saveToken(res.data['token']);
             }).catchError((err) {
               print('err');
               print(err.type);

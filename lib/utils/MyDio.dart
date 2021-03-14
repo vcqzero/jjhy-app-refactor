@@ -1,4 +1,4 @@
-import 'package:app/utils/MyToken.dart';
+import 'package:app/store/Token.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
@@ -40,7 +40,7 @@ class MyDio {
       InterceptorsWrapper(
         onRequest: (RequestOptions options) async {
           // Do something before request is sent
-          String? token = MyToken.getToken();
+          String? token = Token.getToken();
           if (token != null)
             options.headers['Authorization'] = 'Bearer ' + token;
           return options;
