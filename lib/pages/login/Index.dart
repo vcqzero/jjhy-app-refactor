@@ -23,22 +23,17 @@ class _LoginIndexState extends State<LoginPage> {
   Widget build(BuildContext context) {
     bool isPasswordMethod = _loginMethod == LoginMethods.password;
     return Scaffold(
-      appBar: MyAppBar.build(
-        title: '登录',
-        hidden: true,
-      ),
+      appBar: MyAppBar.build(title: '登录', hidden: true),
       body: Column(
         children: [
+          // logo部分
           Container(
             color: Colors.blue[500],
             height: 200,
             alignment: Alignment.center,
             child: Container(
               width: 120,
-              child: Image.asset(
-                ImageAssets.logoInLogin,
-                fit: BoxFit.contain,
-              ),
+              child: Image.asset(ImageAssets.logoInLogin, fit: BoxFit.contain),
             ),
           ),
 

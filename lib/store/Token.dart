@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 final _storage = GetStorage();
 
 class Token {
-  static String storageKey = 'jjhy_app_auth_token_key';
+  static String storageKey = 'token';
 
   /// 写入token
   static Future<void> saveToken(String token) {

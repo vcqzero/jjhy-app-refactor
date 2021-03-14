@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:app/api/AuthApi.dart';
 import 'package:app/api/PhoneApi.dart';
 import 'package:app/main.dart';
+import 'package:app/store/LoginFormStore.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
@@ -101,7 +102,8 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     MyLoading.showLoading("登录中...");
 
     // api
-    MyResponse res = AuthApi.authByCode(phone: widget.phone, code: code);
+    String phone = widget.phone;
+    MyResponse res = AuthApi.authByCode(phone: phone, code: code);
     final future = res.future;
     _cancelToken = res.cancelToken;
     try {
@@ -112,6 +114,8 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
       // 返回
       MyToast.show('登录成功');
       Navigator.of(context).popUntil(ModalRoute.withName(MainPage.routeName));
+      // 写入storage
+      LoginFormStore().phone = phone;
     } on DioError catch (e) {
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('手机号或验证码错误');

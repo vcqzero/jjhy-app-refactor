@@ -4,7 +4,8 @@ import 'package:get_storage/get_storage.dart';
 final _storage = GetStorage();
 
 class User {
-  static String storageKey = 'jjhy_user_store_key';
+  /// 定义之后不可修改，
+  static String storageKey = 'user';
   // basic info
   int? id;
   String? username;
@@ -74,8 +75,8 @@ class User {
     avatar = map['avatar'];
     realname = map['realname'];
     nickname = map['nickname'];
-    hasPassword = map['has_password'];
-    superAdmin = map['super_admin'];
+    hasPassword = map['has_password'] ?? false;
+    superAdmin = map['super_admin'] ?? false;
   }
 
   _setRole(Map map) {
@@ -90,14 +91,14 @@ class User {
     // Map? workyard;
     // List? workyards;
     workyardId = map['workyard_id'];
-    workyard = map['workyard'];
+    workyard = map['belong_workyard'];
     workyards = map['workyards'];
   }
 
   _setCompany(Map map) {
     // Map? company;
     // int? companyId;
-    company = map['company'];
+    company = map['belong_company'];
     companyId = map['company_id'];
   }
 

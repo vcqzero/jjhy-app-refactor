@@ -1,5 +1,6 @@
 import 'package:app/api/PhoneApi.dart';
 import 'package:app/pages/login/TypeCodePage.dart';
+import 'package:app/store/LoginFormStore.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/utils/MyToast.dart';
@@ -25,6 +26,13 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
   _getHelperText() {
     if (!_showHelper || _helperText.isEmpty) return null;
     return _helperText;
+  }
+
+  @override
+  void initState() {
+    String? phone = LoginFormStore().phone;
+    if (phone != null) _controller.text = phone;
+    super.initState();
   }
 
   @override
@@ -86,7 +94,7 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
     return Column(
       children: [
         TextField(
-          autofocus: false,
+          autofocus: true,
           keyboardType: TextInputType.phone,
           controller: _controller,
           focusNode: _focusNode,
