@@ -1,11 +1,13 @@
+import 'dart:developer';
+
 import 'package:app/pages/login/Index.dart';
-import 'package:app/utils/MyLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
+import 'InitApp.dart';
 import 'pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
@@ -14,13 +16,14 @@ import './pages/profile/Settings.dart';
 void main() async {
   await GetStorage.init(); // 初始化storage
   runApp(MyApp());
-  SystemChrome.setPreferredOrientations(
-    [
-      DeviceOrientation.portraitUp, // 禁止横屏
-    ],
-  );
-  // 配置loading
-  MyLoading.config();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp, // 禁止横屏
+  ]);
+  // init app
+  log('init App');
+  InitApp()
+    ..initLoadingConfig()
+    ..initUserData();
 }
 
 final RouteObserver routeObserver = RouteObserver();
@@ -110,9 +113,7 @@ class _MainPageState extends State<MainPage> {
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: currentIndex,
             onTap: (index) => {
-              setState(() {
-                currentIndex = index;
-              })
+              setState(() => {currentIndex = index})
             },
             items: bottomItems,
           ),

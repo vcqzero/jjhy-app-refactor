@@ -5,17 +5,10 @@ import 'package:get_storage/get_storage.dart';
 GetStorage _getBox() => GetStorage();
 
 class User {
-  static Future<void> clear() async {
-    try {
-      await _getBox().remove(_storageKey);
-    } catch (e) {
-      print(e);
-    }
-  }
-
   /// 定义之后不可修改，
   static String _storageKey = 'storage_key_user';
   // basic info
+  bool login = false; // 是否登录
   int? id;
   String? username;
   String? tel;
@@ -46,9 +39,17 @@ class User {
     String userJson = jsonEncode(userMap);
     try {
       await _getBox().write(_storageKey, userJson);
-      print('保存user success');
+      String? username = userMap!['username'];
+      log('success 已将用户 $username 信息存储');
     } catch (e) {
-      print('保存user 数据出错');
+      log('error 保存user 数据出错', error: e);
+    }
+  }
+
+  static Future<void> clear() async {
+    try {
+      await _getBox().remove(_storageKey);
+    } catch (e) {
       print(e);
     }
   }
@@ -87,6 +88,7 @@ class User {
     nickname = map['nickname'];
     hasPassword = map['has_password'] ?? false;
     superAdmin = map['super_admin'] ?? false;
+    login = id != null ? id! > 0 : false;
   }
 
   _setRole(Map map) {
