@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:app/store/Token.dart';
+import 'package:app/store/User.dart';
+import 'package:app/utils/MyToast.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
@@ -59,12 +63,21 @@ class MyDio {
           return response; // continue
         },
         onError: (DioError e) async {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx and is also not 304.
-          // if (e.response != null) {
-          // } else {
-          //   // Something happened in setting up or sending the request that triggered an Error
-          // }
+          if (e.response != null) {
+            switch (e.response!.statusCode) {
+              case 401: // 认证失败或过期,需要清空用户信息
+                await Token.clear();
+                await User.clear();
+                break;
+              case 403: // 没有权限
+                MyToast.show('没有权限!');
+                break;
+              default:
+            }
+          } else {
+            // Something happened in setting up or sending the request that triggered an Error
+            log('request错误', error: e);
+          }
           return e; //continue
         },
       ),

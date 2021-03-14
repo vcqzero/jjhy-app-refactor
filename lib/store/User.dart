@@ -5,6 +5,14 @@ import 'package:get_storage/get_storage.dart';
 GetStorage _getBox() => GetStorage();
 
 class User {
+  static Future<void> clear() async {
+    try {
+      await _getBox().remove(_storageKey);
+    } catch (e) {
+      print(e);
+    }
+  }
+
   /// 定义之后不可修改，
   static String _storageKey = 'storage_key_user';
   // basic info
