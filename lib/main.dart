@@ -20,7 +20,7 @@ void main() async {
     DeviceOrientation.portraitUp, // 禁止横屏
   ]);
   // init app
-  log('init App');
+  log('main-> init App');
   InitApp()
     ..initLoadingConfig()
     ..initUserData();

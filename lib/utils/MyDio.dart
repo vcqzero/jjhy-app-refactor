@@ -6,8 +6,9 @@ import 'package:app/utils/MyToast.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
-const String _baseUrlProd = 'https://api.jjhycom.cn';
-const String _baseUrlDev = 'http://192.168.0.117:3000';
+// const String _baseUrlProd = 'https://api.jjhycom.cn';
+// const String _baseUrlDev = 'http://192.168.0.117:3000';
+const _baseUrl = 'https://api.jjhycom.cn';
 
 class MyResponse {
   Future<Response> future;
@@ -16,8 +17,6 @@ class MyResponse {
 }
 
 class MyDio {
-  static const baseUrl =
-      _inProduction ? _baseUrlProd + '/api' : _baseUrlDev + '/api';
   static bool _inited = false;
   static Dio _instance = Dio();
   static Dio getInstance() {
@@ -31,7 +30,7 @@ class MyDio {
   static _initInstance() {
     _instance = Dio(
       BaseOptions(
-        baseUrl: baseUrl,
+        baseUrl: _baseUrl + '/api',
         connectTimeout: 6000,
         receiveTimeout: 6000,
       ),

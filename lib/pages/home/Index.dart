@@ -23,6 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    log('_HomePageState->initState');
     super.initState();
     _handleQueryBanner();
   }

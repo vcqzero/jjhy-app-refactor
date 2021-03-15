@@ -103,14 +103,14 @@ class User {
     // Map? workyard;
     // List? workyards;
     workyardId = map['workyard_id'];
-    workyard = map['workyard'];
+    workyard = map['belong_workyard'];
     workyards = map['workyards'];
   }
 
   _setCompany(Map map) {
     // Map? company;
     // int? companyId;
-    company = map['company'];
+    company = map['belong_company'];
     companyId = map['company_id'];
   }
 
