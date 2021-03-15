@@ -75,7 +75,9 @@ class MyDio {
             }
           } else {
             // Something happened in setting up or sending the request that triggered an Error
-            log('request错误', error: e);
+            if (e.type != DioErrorType.cancel) {
+              log('MyDio->request错误', error: e);
+            }
           }
           return e; //continue
         },

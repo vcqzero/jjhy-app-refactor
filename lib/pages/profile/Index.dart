@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
                 },
                 child: Text('登录'),
               ),
-              Text('----'),
+              Text(user.login ? '已登录' : '未登录'),
               Text(user.username ?? ''),
             ],
           )),
