@@ -8,6 +8,7 @@ import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/store/Token.dart';
+import 'package:app/utils/MyString.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
@@ -44,7 +45,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
 
   @override
   void initState() {
-    _phoneSafety = _toSafety(widget.phone);
+    _phoneSafety = MyString.phoneToSafety(widget.phone);
     _resendDelaySeconds = widget.delaySeconds;
     _codeLen = widget.codeLen;
     _startResendTimer();
@@ -60,11 +61,6 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     _codeLen = codeLen;
     if (_resendTimer.isActive) _resendTimer.cancel();
     _startResendTimer();
-  }
-
-  String _toSafety(String phone) {
-    if (phone.length < 4) return '';
-    return phone.replaceRange(3, 7, '****');
   }
 
   List<Widget> _getCodeBoxes() {

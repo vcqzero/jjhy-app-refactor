@@ -8,15 +8,20 @@ class User {
   /// 定义之后不可修改，
   static String _storageKey = 'storage_key_user';
   // basic info
-  bool login = false; // 是否登录
+
+  /// 是否登录
+  bool login = false;
   int? id;
   String? username;
   String? tel;
   String? avatar;
   String? realname;
   String? nickname;
-  bool hasPassword = false; // 是否设置过密码
-  bool superAdmin = false; // 是否是超级管理员
+
+  /// 是否设置过密码
+  bool hasPassword = false;
+  // 是否是超级管理员
+  bool superAdmin = false;
 
   //role
   List? roles;

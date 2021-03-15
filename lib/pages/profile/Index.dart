@@ -1,7 +1,9 @@
 import 'package:app/main.dart';
-import 'package:app/pages/login/Index.dart';
+import 'package:app/pages/profile/widges/TheAvatarSection.dart';
+import 'package:app/pages/profile/widges/TheListSection.dart';
 import 'package:app/store/User.dart';
 import 'package:app/widgets/MyAppBar.dart';
+import 'package:app/widgets/MyLoginButton.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -42,17 +44,44 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
   Widget build(BuildContext context) {
     return Container(
       child: Scaffold(
-          appBar: MyAppBar.build(title: '我的'),
-          body: Column(
-            children: [
-              ElevatedButton(
+          appBar: MyAppBar.build(
+            title: '我的',
+            centerTitle: false,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: Text('关于'),
+                tooltip: "搜索",
                 onPressed: () {
-                  Navigator.pushNamed(context, LoginPage.routeName);
+                  print("搜索");
                 },
-                child: Text('登录'),
+              )
+            ],
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              // 头像区域部分
+              Container(
+                color: Colors.blue,
+                width: double.infinity,
+                height: 100,
+                // alignment: Alignment.center,
+                child: TheAvatarSection(
+                  username: user.username,
+                  phone: user.tel,
+                  avatar: user.avatar,
+                ),
               ),
-              Text(user.login ? '已登录' : '未登录'),
-              Text(user.username ?? ''),
+              Expanded(
+                flex: 1,
+                child: !user.login
+                    ? TheListSection()
+                    : Container(
+                        alignment: Alignment.center,
+                        child: MyLoginButton(),
+                      ),
+              ),
             ],
           )),
     );

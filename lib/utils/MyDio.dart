@@ -6,9 +6,8 @@ import 'package:app/utils/MyToast.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
-// const String _baseUrlProd = 'https://api.jjhycom.cn';
-// const String _baseUrlDev = 'http://192.168.0.117:3000';
-const _baseUrl = 'https://api.jjhycom.cn';
+// const _baseUrl = 'https://api.jjhycom.cn'; // production
+const _baseUrl = 'http://192.168.0.117:3000'; // dev
 
 class MyResponse {
   Future<Response> future;
