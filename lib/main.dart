@@ -75,17 +75,17 @@ class _MainPageState extends State<MainPage> {
     {
       'title': '首页',
       'icon': Icons.home,
-      'body': HomePage(),
+      'body': HomePage(key: PageStorageKey('home')),
     },
     {
       'title': '待办',
       'icon': Icons.today_outlined,
-      'body': TodoPage(),
+      'body': TodoPage(key: PageStorageKey('todo')),
     },
     {
       'title': '我的',
       'icon': Icons.person,
-      'body': ProfilePage(),
+      'body': ProfilePage(key: PageStorageKey('my')),
     },
   ];
 

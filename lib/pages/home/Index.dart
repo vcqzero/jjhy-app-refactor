@@ -21,13 +21,19 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    log('_HomePageState->initState');
     super.initState();
-    _handleQueryBanner();
   }
 
   @override
   void didChangeDependencies() {
+    // 从pageStorage中读取数据
+    String? imageUrlInStorage =
+        PageStorage.of(context)!.readState(context, identifier: 'imageUrl');
+    if (imageUrlInStorage != null) {
+      setState(() => {imageUrl = imageUrlInStorage});
+    } else {
+      _handleQueryBanner();
+    }
     super.didChangeDependencies();
   }
 
@@ -36,7 +42,12 @@ class _HomePageState extends State<HomePage> {
       MyResponse res = AppSetings.getBanners();
       cancelToken = res.cancelToken;
       String? imgUrl = await res.future.then((r) => r.data['items'][0]['url']);
-      if (imgUrl != null) setState(() => {imageUrl = imgUrl});
+      if (imgUrl == null) return;
+      setState(() {
+        imageUrl = imgUrl;
+        PageStorage.of(context)!
+            .writeState(context, imageUrl, identifier: 'imageUrl');
+      });
     } on DioError catch (e) {
       print(e);
     }
