@@ -33,6 +33,7 @@ dependencies:
   dio: ^4.0.0-beta5
   # redux: ^5.0.0
   get_storage: ^2.0.1
+  device_info: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +53,7 @@ flutter:
   assets:
     - lib/assets/default_banner.jpeg
     - lib/assets/logo_in_login.png
+    - lib/assets/logo_in_about.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
