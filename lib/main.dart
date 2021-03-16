@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'package:app/Config.dart';
 import 'package:app/routes.dart';
-import 'package:app/utils/MyDeviceInfo.dart';
-import 'package:device_info/device_info.dart';
+import 'package:app/utils/MyPackage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -103,7 +102,6 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    MyDeviceInfo.test();
     return WillPopScope(
         child: Scaffold(
           // appBar: MyWidgets.getAppBar(),

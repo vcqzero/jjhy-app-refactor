@@ -33,7 +33,7 @@ dependencies:
   dio: ^4.0.0-beta5
   # redux: ^5.0.0
   get_storage: ^2.0.1
-  device_info: ^2.0.0
+  package_info_plus: ^1.0.0
 
 dev_dependencies:
   flutter_test:
