@@ -1,4 +1,5 @@
 import 'package:app/main.dart';
+import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/profile/widges/TheAvatarSection.dart';
 import 'package:app/pages/profile/widges/TheListSection.dart';
 import 'package:app/store/User.dart';
@@ -51,10 +52,9 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
             actions: [
               IconButton(
                 icon: Text('关于'),
-                tooltip: "搜索",
-                onPressed: () {
-                  print("搜索");
-                },
+                tooltip: "关于",
+                onPressed: () =>
+                    {Navigator.of(context).pushNamed(AboutPage.routeName)},
               )
             ],
           ),
@@ -75,7 +75,7 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
               ),
               Expanded(
                 flex: 1,
-                child: !user.login
+                child: user.login
                     ? TheListSection()
                     : Container(
                         alignment: Alignment.center,

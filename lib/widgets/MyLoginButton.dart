@@ -18,7 +18,7 @@ class MyLoginButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              Icons.lock_open_outlined,
+              Icons.lock_outline,
               size: 48,
               color: Colors.grey.shade600,
             ),

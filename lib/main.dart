@@ -1,7 +1,6 @@
 import 'dart:developer';
-
 import 'package:app/Config.dart';
-import 'package:app/pages/login/Index.dart';
+import 'package:app/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -12,7 +11,6 @@ import 'InitApp.dart';
 import 'pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
-import './pages/profile/Settings.dart';
 
 void main() async {
   await GetStorage.init(); // 初始化storage
@@ -53,11 +51,7 @@ class MyApp extends StatelessWidget {
       initialRoute: MainPage.routeName,
       builder: EasyLoading.init(),
       navigatorObservers: [routeObserver],
-      routes: {
-        MainPage.routeName: (context) => MainPage(),
-        SettingsPage.routeName: (context) => SettingsPage(),
-        LoginPage.routeName: (context) => LoginPage(),
-      },
+      routes: routes,
     );
   }
 }
