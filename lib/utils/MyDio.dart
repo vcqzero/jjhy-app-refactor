@@ -1,13 +1,12 @@
 import 'dart:developer';
 
+import 'package:app/Config.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:dio/dio.dart';
 
 const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
-// const _baseUrl = 'https://api.jjhycom.cn'; // production
-const _baseUrl = 'http://192.168.0.117:3000'; // dev
 
 class MyResponse {
   Future<Response> future;
@@ -29,7 +28,7 @@ class MyDio {
   static _initInstance() {
     _instance = Dio(
       BaseOptions(
-        baseUrl: _baseUrl + '/api',
+        baseUrl: Config.baseUrl + '/api',
         connectTimeout: 6000,
         receiveTimeout: 6000,
       ),

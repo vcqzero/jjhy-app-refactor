@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app/Config.dart';
 import 'package:app/pages/login/Index.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
         const Locale('en', 'US'),
       ],
       debugShowCheckedModeBanner: false,
-      title: '京9',
+      title: Config.appName,
       theme: ThemeData(
         primaryColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
