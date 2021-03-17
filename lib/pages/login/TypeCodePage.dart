@@ -119,7 +119,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     } finally {
       // hide loading
       _authLoging = false;
-      MyLoading.dismiss();
+      MyLoading.hide();
     }
   }
 
@@ -138,10 +138,10 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
       _handleResetState(codeLen: codeCount, delaySeconds: delaySeconds);
 
       // loading
-      MyLoading.dismiss();
+      MyLoading.hide();
       MyLoading.success('发送成功');
     } on DioError catch (e) {
-      MyLoading.dismiss();
+      MyLoading.hide();
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('网络错误，请稍后重试');
     } finally {

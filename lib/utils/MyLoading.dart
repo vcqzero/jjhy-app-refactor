@@ -13,7 +13,7 @@ class MyLoading {
   }
 
   // 关闭loading
-  static void dismiss() {
+  static void hide() {
     EasyLoading.dismiss();
   }
 
