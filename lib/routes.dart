@@ -1,5 +1,6 @@
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
+import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/pages/login/Index.dart';
 import 'package:app/pages/profile/Settings.dart';
 import 'package:flutter/material.dart';
@@ -16,4 +17,6 @@ Map<String, Widget Function(BuildContext)> routes = {
 
   /// 关于我们
   AboutPage.routeName: (c) => AboutPage(),
+  // 隐私政策
+  PrivacyPage.routeName: (c) => PrivacyPage(),
 };

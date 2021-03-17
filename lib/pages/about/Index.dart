@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:app/Config.dart';
 import 'package:app/assets/ImageAssets.dart';
+import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/utils/MyPackage.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
@@ -88,9 +89,8 @@ class _AboutPageState extends State<AboutPage> {
                   leading: Icon(Icons.privacy_tip_outlined),
                   title: Text('隐私条款'),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    print('object');
-                  },
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(PrivacyPage.routeName),
                 ),
                 Divider(),
                 ListTile(
