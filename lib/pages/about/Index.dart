@@ -3,11 +3,13 @@ import 'dart:developer';
 import 'package:app/Config.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/about/PrivacyPage.dart';
+import 'package:app/utils/MyDownloader.dart';
 import 'package:app/utils/MyPackage.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class AboutPage extends StatefulWidget {
   static String routeName = 'AboutPage';
@@ -20,11 +22,19 @@ class AboutPage extends StatefulWidget {
 class _AboutPageState extends State<AboutPage> {
   String? _versionName;
   AppVersion? _newVersion;
+  MyDownloader? downloader;
 
   @override
   void initState() {
     super.initState();
     _handleInitPackageInfo();
+    downloader = MyDownloader();
+  }
+
+  @override
+  void dispose() {
+    if (downloader != null) downloader!.unbindBackgroundIsolate();
+    super.dispose();
   }
 
   _handleInitPackageInfo() async {
@@ -39,39 +49,13 @@ class _AboutPageState extends State<AboutPage> {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   _handleClickVersion() async {
     log('处理新版本');
-    try {
-      const String downloadUrl =
-          'https://api.jjhycom.cn/storage/apks/jingjiu-v1.6.0.apk';
+    String url = 'https://api.jjhycom.cn/storage/apks/jingjiu-v1.6.0.apk';
+    String filename = 'jingjiu.apk';
 
-      WidgetsFlutterBinding.ensureInitialized();
-      await FlutterDownloader.initialize(
-        debug: true, // optional: set false to disable printing logs to console
-      );
-      /**
-       * 需要添加读取权限
-       * 和下载路径
-       * permission_handler path_provider
-       */
-      final taskId = await FlutterDownloader.enqueue(
-        url: downloadUrl,
-        savedDir: '/',
-        fileName: 'jjhy-apk.apk',
-        showNotification:
-            true, // show download progress in status bar (for Android)
-        openFileFromNotification:
-            true, // click on notification to open downloaded file (for Android)
-      );
-      await FlutterDownloader.loadTasks();
-    } catch (e) {
-      log('download 错误', error: e);
-    }
+    if (downloader != null)
+      downloader!.downloadFile(url: url, filename: filename);
   }
 
   @override
