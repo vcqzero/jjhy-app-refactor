@@ -1,11 +1,9 @@
 import 'dart:developer';
 import 'package:app/Config.dart';
 import 'package:app/routes.dart';
-import 'package:app/utils/MyPackage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
@@ -15,8 +13,6 @@ import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(debug: true); // 初始化下载
   await GetStorage.init(); // 初始化storage
   runApp(MyApp());
   SystemChrome.setPreferredOrientations([
