@@ -6,20 +6,11 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void downloadCallback(
-  String id,
-  DownloadTaskStatus status,
-  int progress,
-) {
-  SendPort? send = IsolateNameServer.lookupPortByName('downloader_send_port');
-  if (send != null) send.send([id, status, progress]);
-}
-
 class MyDownloader {
   ReceivePort _port = ReceivePort();
   MyDownloader() {
     _bindBackgroundIsolate();
-    FlutterDownloader.registerCallback(downloadCallback);
+    FlutterDownloader.registerCallback(_downloadCallback);
   }
   void _bindBackgroundIsolate() {
     bool isSuccess = IsolateNameServer.registerPortWithName(
@@ -43,23 +34,28 @@ class MyDownloader {
     IsolateNameServer.removePortNameMapping('downloader_send_port');
   }
 
+  static void _downloadCallback(
+    String id,
+    DownloadTaskStatus status,
+    int progress,
+  ) {
+    SendPort? send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    if (send != null) send.send([id, status, progress]);
+  }
+
   /// 下载文件
   downloadFile({
     required String url,
     required String filename,
   }) async {
     try {
-      // 请求权限
-      bool res = await Permission.storage.request().isGranted;
-      if (!res) return;
-
       Directory tempDir = await getTemporaryDirectory(); // 获取临时目录
       /**
        * 需要添加读取权限
        * 和下载路径
        * permission_handler path_provider
        */
-      final taskId = await FlutterDownloader.enqueue(
+      await FlutterDownloader.enqueue(
         url: url,
         savedDir: tempDir.path,
         fileName: filename,
