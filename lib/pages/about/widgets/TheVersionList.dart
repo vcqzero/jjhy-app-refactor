@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:app/utils/MyPackage.dart';
+import 'package:app/utils/MyPermission.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:open_file/open_file.dart';
@@ -45,33 +46,44 @@ class _TheVersionListState extends State<TheVersionList> {
   }
 
   _handleInstall(filename) async {
-    OpenResult res = await OpenFile.open(filename);
-    print(res.message);
-    print(res.type);
+    bool hasPermission = await MyPermission().haveInstallPermission();
+    if (hasPermission == false) {
+      await MyPermission().requestInstallPermission();
+    } else {
+      OpenResult res = await OpenFile.open(filename);
+      print(res.message);
+      print(res.type);
+    }
   }
 
   _handleDownloadApk() async {
-    log('处理新版本');
+    if (_newVersion == null) return;
+    if (Platform.isIOS) {
+      return;
+    }
     // 请求权限
     bool res = await Permission.storage.request().isGranted;
     if (!res) return;
-    // 绑定回调函数
-    // 判断权限
-    // 下载
-    // 监听下载
-
-    String url = 'https://api.jjhycom.cn/storage/apks/jingjiu-v1.6.0.apk';
+    String? url = _newVersion!.downloadUrl;
+    String? version = _newVersion!.version;
     Directory? dir = await getExternalStorageDirectory();
-    if (dir == null) return;
-    String filename = dir.path + '/jingjiu.apk';
+    if (dir == null || url == null || version == null) return;
+    String filename = dir.path + '/jingjiu_$version.apk';
     log(filename);
-    return _handleInstall(filename);
+    // 判断是否存在
+    File _apkFile = File(filename);
+    bool exists = await _apkFile.exists();
+    if (exists) return _handleInstall(filename);
+    // 不存在则重新下载
     await Dio().download(
       url,
       filename,
       onReceiveProgress: (received, total) {
         print('$received/$total');
-        if (received >= total) _handleInstall(filename);
+        if (received >= total) {
+          print('下载完成');
+          _handleInstall(filename);
+        }
       },
     );
     try {} catch (e) {
