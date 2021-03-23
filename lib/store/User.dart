@@ -39,13 +39,16 @@ class User {
   // jpush
   List? jpushDevices;
 
+  static User? _cache;
+
   /// 将user map数据保存到storage中
   static Future<void> store(Map? userMap) async {
     String userJson = jsonEncode(userMap);
     try {
       await _getBox().write(_storageKey, userJson);
+      _cache = null;
       String? username = userMap!['username'];
-      log('success 已将用户 $username 信息存储');
+      log('success 已将用户 $username 更新至storage');
     } catch (e) {
       log('error 保存user 数据出错', error: e);
     }
@@ -54,12 +57,13 @@ class User {
   static Future<void> clear() async {
     try {
       await _getBox().remove(_storageKey);
+      _cache = null;
     } catch (e) {
       print(e);
     }
   }
 
-  /// 从storage读取数据
+  /// 重新读取并new User对象
   User.build() {
     Map map = {};
     try {
@@ -71,9 +75,18 @@ class User {
       _setWorkyard(map);
       _setCompany(map);
       _setJpush(map);
+      _cache = this;
     } catch (e) {
       log('BUILD USER ERROR', error: e);
     }
+  }
+
+  /// 读取已构建完成的user实例
+  factory User.cache() {
+    if (_cache != null) {
+      return _cache!;
+    }
+    return User.build();
   }
 
   _setBasicInfo(Map map) {

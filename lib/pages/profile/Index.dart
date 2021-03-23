@@ -6,6 +6,7 @@ import 'package:app/store/User.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyLoginButton.dart';
 import 'package:flutter/material.dart';
+import 'package:app/pages/settings/Index.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key}) : super(key: key);
@@ -15,11 +16,11 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> with RouteAware {
-  late User user;
+  late User _user;
 
   @override
   void initState() {
-    user = User.build();
+    _user = User.cache();
     super.initState();
   }
 
@@ -35,14 +36,16 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
     super.didChangeDependencies();
   }
 
+  /// 从上一页返回本页面
   @override
   void didPopNext() {
-    setState(() => user = User.build());
+    setState(() => _user = User.build());
     super.didPopNext();
   }
 
   @override
   Widget build(BuildContext context) {
+    bool _login = _user.login;
     return Container(
       child: Scaffold(
           appBar: MyAppBar.build(
@@ -51,10 +54,13 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
             elevation: 0,
             actions: [
               IconButton(
-                icon: Text('关于'),
+                icon: Text(_login ? '设置' : '关于'),
                 tooltip: "关于",
-                onPressed: () =>
-                    {Navigator.of(context).pushNamed(AboutPage.routeName)},
+                onPressed: () {
+                  String _routeName =
+                      _login ? SettingsPage.routeName : AboutPage.routeName;
+                  Navigator.of(context).pushNamed(_routeName);
+                },
               )
             ],
           ),
@@ -68,14 +74,15 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
                 height: 100,
                 // alignment: Alignment.center,
                 child: TheAvatarSection(
-                  username: user.username,
-                  phone: user.tel,
-                  avatar: user.avatar,
+                  username: _user.username,
+                  phone: _user.tel,
+                  avatar: _user.avatar,
                 ),
               ),
+              // body内容
               Expanded(
                 flex: 1,
-                child: user.login
+                child: _login
                     ? TheListSection()
                     : Container(
                         alignment: Alignment.center,

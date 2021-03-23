@@ -2,8 +2,8 @@ import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/pages/login/Index.dart';
-import 'package:app/pages/profile/Settings.dart';
 import 'package:flutter/material.dart';
+import 'package:app/pages/settings/Index.dart';
 
 Map<String, Widget Function(BuildContext)> routes = {
   /// 主页面
