@@ -7,7 +7,7 @@ class Config {
       'https://api.jjhycom.cn/storage/avatars/default.png';
 
   ///隐私条款url
-  static String privacyUrl = 'http://admin.jjhycom.cn/privacy';
+  static String privacyUrl = 'https://api.jjhycom.cn/privacy';
 
   /// 接口baseUrl
   static String baseUrl = 'https://api.jjhycom.cn';
