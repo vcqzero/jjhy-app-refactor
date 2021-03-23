@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
