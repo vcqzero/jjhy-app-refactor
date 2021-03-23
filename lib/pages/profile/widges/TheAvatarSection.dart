@@ -1,4 +1,4 @@
-import 'package:app/Config.dart';
+import 'package:app/app/Config.dart';
 import 'package:app/utils/MyString.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

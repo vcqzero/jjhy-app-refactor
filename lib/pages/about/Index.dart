@@ -1,4 +1,4 @@
-import 'package:app/Config.dart';
+import 'package:app/app/Config.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/pages/about/widgets/TheVersionList.dart';

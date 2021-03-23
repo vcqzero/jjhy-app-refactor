@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';
-import 'api/UserApi.dart';
-import 'store/Token.dart';
+import '../api/UserApi.dart';
+import '../store/Token.dart';
 
 class InitApp {
   void initLoadingConfig() => MyLoading.config(); // 配置loading

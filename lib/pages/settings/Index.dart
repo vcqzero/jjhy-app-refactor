@@ -1,4 +1,4 @@
-import 'package:app/Config.dart';
+import 'package:app/app/Config.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/store/User.dart';
 import 'package:app/widgets/MyAppBar.dart';

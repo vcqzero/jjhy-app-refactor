@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:app/Config.dart';
+import 'package:app/app/Config.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
