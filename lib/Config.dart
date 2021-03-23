@@ -10,7 +10,6 @@ class Config {
   static String privacyUrl = 'https://api.jjhycom.cn/privacy';
 
   /// 接口baseUrl
-  static String baseUrl = 'https://api.jjhycom.cn';
-  // static String baseUrl = 'http://192.168.0.117:3000';
-
+  // static String baseUrl = 'https://api.jjhycom.cn';
+  static String baseUrl = 'http://192.168.0.112:3000/';
 }
