@@ -11,5 +11,5 @@ class Config {
 
   /// 接口baseUrl
   // static String baseUrl = 'https://api.jjhycom.cn';
-  static String baseUrl = 'http://192.168.0.112:3000/';
+  static String baseUrl = 'http://192.168.0.110:3000/';
 }

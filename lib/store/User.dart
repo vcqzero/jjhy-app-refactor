@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:app/api/UserApi.dart';
+import 'package:app/store/Token.dart';
+import 'package:app/utils/MyDio.dart';
 import 'package:get_storage/get_storage.dart';
 
 GetStorage _getBox() => GetStorage();
@@ -48,7 +51,7 @@ class User {
       await _getBox().write(_storageKey, userJson);
       _cache = null;
       String? username = userMap!['username'];
-      log('success 已将用户 $username 更新至storage');
+      log('User-> 已将用户 $username 信息更新至storage');
     } catch (e) {
       log('error 保存user 数据出错', error: e);
     }
@@ -87,6 +90,20 @@ class User {
       return _cache!;
     }
     return User.build();
+  }
+
+  /// 从服务器重新刷新用户数据
+  static Future<void> reload() async {
+    try {
+      // 判断是否存在token
+      String? token = Token().val;
+      if (token == null || token.isEmpty) return log('User-> token无效，无法加载用户');
+      MyResponse res = UserApi.querySignedUser();
+      Map userMap = await res.future.then((value) => value.data['user']);
+      await User.store(userMap);
+    } catch (e) {
+      log('User-> 用户加载失败', error: e);
+    }
   }
 
   _setBasicInfo(Map map) {

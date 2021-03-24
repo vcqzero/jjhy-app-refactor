@@ -18,7 +18,7 @@ class UserApi {
   static MyResponse updateAvatar(FormData formData) {
     CancelToken cancelToken = CancelToken();
     final future = _dio.post(
-      '/users/me/avatar2',
+      '/users/me/avatar',
       cancelToken: cancelToken,
       data: formData,
     );
