@@ -13,4 +13,15 @@ class UserApi {
     );
     return MyResponse(future: future, cancelToken: cancelToken);
   }
+
+  /// 修改用户头像
+  static MyResponse updateAvatar(FormData formData) {
+    CancelToken cancelToken = CancelToken();
+    final future = _dio.post(
+      '/users/me/avatar2',
+      cancelToken: cancelToken,
+      data: formData,
+    );
+    return MyResponse(future: future, cancelToken: cancelToken);
+  }
 }
