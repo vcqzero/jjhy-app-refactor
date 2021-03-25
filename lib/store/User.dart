@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:app/api/UserApi.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyString.dart';
 import 'package:get_storage/get_storage.dart';
 
 GetStorage _getBox() => GetStorage();
@@ -17,6 +18,7 @@ class User {
   int? id;
   String? username;
   String? tel;
+  String? telEncryption;
   String? avatar;
   String? realname;
   String? nickname;
@@ -57,6 +59,7 @@ class User {
     }
   }
 
+  /// 清空user数据
   static Future<void> clear() async {
     try {
       await _getBox().remove(_storageKey);
@@ -118,6 +121,7 @@ class User {
     id = map['id'];
     username = map['username'];
     tel = map['tel'];
+    if (tel != null) telEncryption = MyString.encryptPhone(tel!);
     avatar = map['avatar'];
     realname = map['realname'];
     nickname = map['nickname'];

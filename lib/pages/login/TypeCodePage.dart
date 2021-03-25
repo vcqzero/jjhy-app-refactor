@@ -45,7 +45,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
 
   @override
   void initState() {
-    _phoneSafety = MyString.phoneToSafety(widget.phone);
+    _phoneSafety = MyString.encryptPhone(widget.phone);
     _resendDelaySeconds = widget.delaySeconds;
     _codeLen = widget.codeLen;
     _startResendTimer();

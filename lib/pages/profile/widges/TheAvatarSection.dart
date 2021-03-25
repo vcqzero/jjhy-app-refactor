@@ -43,7 +43,7 @@ class TheAvatarSection extends StatelessWidget {
                   Container(
                     margin: EdgeInsets.only(top: 12),
                     child: Text(
-                      phone != null ? MyString.phoneToSafety(phone!) : '',
+                      phone != null ? MyString.encryptPhone(phone!) : '',
                       style: TextStyle(
                         color: Colors.white,
                       ),

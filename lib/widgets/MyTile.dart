@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 class MyTile extends StatefulWidget {
   final String title;
   final Widget? trailingWidget;
-  final Function()? onTap;
+  final void Function()? onTap;
+  final Color titleColor;
   MyTile({
     Key? key,
     required this.title,
     this.trailingWidget,
     this.onTap,
+    this.titleColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -30,7 +32,12 @@ class _MyTileState extends State<MyTile> {
   Widget build(BuildContext context) {
     return ListTile(
       tileColor: Colors.white,
-      title: Text(widget.title),
+      title: Text(
+        widget.title,
+        style: TextStyle(
+          color: widget.titleColor,
+        ),
+      ),
       trailing: Container(
         width: 200,
         // color: Colors.red,
