@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
-import 'package:app/api/UserApi.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
