@@ -2,6 +2,7 @@ import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/pages/login/Index.dart';
+import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:flutter/material.dart';
 import 'package:app/pages/settings/Index.dart';
 

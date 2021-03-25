@@ -91,7 +91,9 @@ class _MainPageState extends State<MainPage> {
     for (var i = 0; i < len; i++) {
       items.add(
         BottomNavigationBarItem(
-            icon: Icon(pageConfigs[i]['icon']), label: pageConfigs[i]['title']),
+          icon: Icon(pageConfigs[i]['icon']),
+          label: pageConfigs[i]['title'],
+        ),
       );
     }
     return items;

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 class MyButton extends StatelessWidget {
   final String label;
-  final Function() onPressed;
+  final void Function() onPressed;
   final bool loading;
   final bool fullWidth;
   final bool isElevated;
+  final bool disabled;
   const MyButton.elevated({
     Key? key,
     required this.label,
@@ -13,6 +14,7 @@ class MyButton extends StatelessWidget {
     this.loading = false,
     this.fullWidth = true,
     this.isElevated = true,
+    this.disabled = false,
   }) : super(key: key);
 
   const MyButton.text({
@@ -22,6 +24,7 @@ class MyButton extends StatelessWidget {
     this.loading = false,
     this.fullWidth = true,
     this.isElevated = false,
+    this.disabled = false,
   }) : super(key: key);
 
   void _handlePressed() {
@@ -41,7 +44,12 @@ class MyButton extends StatelessWidget {
         ),
       );
     } else {
-      return Text(label);
+      return Text(
+        label,
+        style: TextStyle(
+          color: Colors.white,
+        ),
+      );
     }
   }
 
@@ -55,11 +63,16 @@ class MyButton extends StatelessWidget {
       width: _width,
       child: isElevated
           ? ElevatedButton(
-              onPressed: _handlePressed,
+              style: ButtonStyle(
+                backgroundColor: disabled
+                    ? MaterialStateProperty.all(Colors.blue.shade300)
+                    : null,
+              ),
+              onPressed: (loading || disabled) ? null : _handlePressed,
               child: _renderChild(),
             )
           : TextButton(
-              onPressed: _handlePressed,
+              onPressed: (loading || disabled) ? null : _handlePressed,
               child: _renderChild(),
             ),
     );

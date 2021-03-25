@@ -24,4 +24,15 @@ class UserApi {
     );
     return MyResponse(future: future, cancelToken: cancelToken);
   }
+
+  /// 修改用户username realname nickname password
+  static MyResponse updateBasicInfo(Map<String, String> data) {
+    CancelToken cancelToken = CancelToken();
+    final future = _dio.post(
+      '/users/me',
+      cancelToken: cancelToken,
+      data: data,
+    );
+    return MyResponse(future: future, cancelToken: cancelToken);
+  }
 }

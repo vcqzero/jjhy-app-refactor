@@ -2,11 +2,13 @@ import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
 import 'package:app/pages/about/Index.dart';
+import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDialog.dart';
 import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyLoading.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyTile.dart';
 import 'package:dio/dio.dart';
@@ -27,10 +29,12 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     if (_cancelToken != null) _cancelToken!.cancel();
+    MyLoading.hide();
     super.dispose();
   }
 
   Future<void> _handleLogout() async {
+    MyLoading.showLoading('退出中...');
     MyResponse res = AuthApi.logout();
     _cancelToken = res.cancelToken;
     try {
@@ -40,12 +44,15 @@ class _SettingsPageState extends State<SettingsPage> {
       Navigator.of(context).pop();
     } catch (e) {
       log('退出登录错误', error: e);
+    } finally {
+      MyLoading.hide();
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: MyAppBar.build(
         title: '设置',
         actions: [
@@ -66,7 +73,19 @@ class _SettingsPageState extends State<SettingsPage> {
           TheAvatarTile(),
           Divider(height: 1),
           // 昵称
-          MyTile(title: '昵称', trailingWidget: Text(_user.nickname ?? '')),
+          MyTile(
+              title: '昵称',
+              trailingWidget: Text(_user.nickname ?? ''),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditUserInfoPage(
+                      val: _user.nickname,
+                    ),
+                  ),
+                );
+              }),
           Divider(height: 1),
           SizedBox(height: 15),
           // 角色
