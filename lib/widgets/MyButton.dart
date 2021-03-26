@@ -65,8 +65,8 @@ class MyButton extends StatelessWidget {
           ? ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: disabled
-                    ? MaterialStateProperty.all(Colors.blue.shade300)
-                    : null,
+                    ? MaterialStateProperty.all(Colors.blue.shade200)
+                    : MaterialStateProperty.all(Colors.blue),
               ),
               onPressed: (loading || disabled) ? null : _handlePressed,
               child: _renderChild(),

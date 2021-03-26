@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
+import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
@@ -22,15 +23,29 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> with RouteAware {
   User _user = User.cache();
   CancelToken? _cancelToken;
 
   @override
+  void didChangeDependencies() {
+    routeObserver.subscribe(this, ModalRoute.of(context)!); //订阅
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
+    routeObserver.unsubscribe(this);
     if (_cancelToken != null) _cancelToken!.cancel();
     MyLoading.hide();
     super.dispose();
+  }
+
+  /// 从上一页返回本页面
+  @override
+  void didPopNext() {
+    setState(() => _user = User.cache());
+    super.didPopNext();
   }
 
   Future<void> _handleLogout() async {
@@ -75,7 +90,14 @@ class _SettingsPageState extends State<SettingsPage> {
           // 昵称
           MyTile(
               title: '昵称',
-              trailingWidget: Text(_user.nickname ?? ''),
+              trailingWidget: Container(
+                alignment: Alignment.centerRight,
+                width: 170,
+                child: Text(
+                  _user.nickname ?? '',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
               onTap: () {
                 Navigator.push(
                   context,

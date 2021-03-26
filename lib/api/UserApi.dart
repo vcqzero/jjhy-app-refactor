@@ -26,9 +26,21 @@ class UserApi {
   }
 
   /// 修改用户username realname nickname password
-  static MyResponse updateBasicInfo(Map<String, String> data) {
+  static MyResponse updateBasicInfo({
+    String? username,
+    String? realname,
+    String? nickname,
+    String? password,
+  }) {
+    // 构建数据
+    Map<String, String> data = {};
+    if (username != null) data['username'] = username;
+    if (realname != null) data['realname'] = realname;
+    if (nickname != null) data['nickname'] = nickname;
+    if (password != null) data['password'] = password;
+    // dio
     CancelToken cancelToken = CancelToken();
-    final future = _dio.post(
+    final future = _dio.put(
       '/users/me',
       cancelToken: cancelToken,
       data: data,

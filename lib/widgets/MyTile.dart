@@ -39,7 +39,7 @@ class _MyTileState extends State<MyTile> {
         ),
       ),
       trailing: Container(
-        width: 200,
+        width: 220,
         // color: Colors.red,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
