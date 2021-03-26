@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class Config {
   /// 应用名称
   static String appName = "京9";
@@ -12,4 +14,7 @@ class Config {
   /// 接口baseUrl
   static String baseUrl = 'https://api.jjhycom.cn';
   // static String baseUrl = 'http://192.168.0.112:3000/';
+
+  /// 页面背景色
+  static Color pageBackgroudColor = Colors.grey.shade100;
 }

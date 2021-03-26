@@ -25,11 +25,15 @@ class User {
 
   /// 是否设置过密码
   bool hasPassword = false;
-  // 是否是超级管理员
-  bool superAdmin = false;
+
+  /// 是否是超级管理员
+  bool isSuperAdmin = false;
 
   //role
-  List? roles;
+  /// 所有的角色名称
+  List? roleNames;
+
+  /// 所有的角色聚合信息
   List? rolesAll;
 
   //workyard
@@ -44,14 +48,14 @@ class User {
   // jpush
   List? jpushDevices;
 
-  static User? _cache;
+  static User? _cached;
 
   /// 将user map数据保存到storage中
   static Future<void> store(Map? userMap) async {
     String userJson = jsonEncode(userMap);
     try {
       await _getBox().write(_storageKey, userJson);
-      _cache = null;
+      _cached = null;
       String? username = userMap!['username'];
       log('User-> 已将用户 $username 信息更新至storage');
     } catch (e) {
@@ -63,7 +67,7 @@ class User {
   static Future<void> clear() async {
     try {
       await _getBox().remove(_storageKey);
-      _cache = null;
+      _cached = null;
     } catch (e) {
       print(e);
     }
@@ -81,16 +85,17 @@ class User {
       _setWorkyard(map);
       _setCompany(map);
       _setJpush(map);
-      _cache = this;
+      _cached = this;
     } catch (e) {
       log('BUILD USER ERROR', error: e);
     }
   }
 
   /// 读取已构建完成的user实例
-  factory User.cache() {
-    if (_cache != null) {
-      return _cache!;
+  factory User.cached() {
+    if (_cached != null) {
+      log('读取用户缓存数据');
+      return _cached!;
     }
     return User.build();
   }
@@ -110,14 +115,6 @@ class User {
   }
 
   _setBasicInfo(Map map) {
-    // int? id;
-    // String? username;
-    // String? tel;
-    // String? avatar;
-    // String? realname;
-    // String? nickname;
-    // bool hasPassword; // 是否设置过密码
-    // bool superAdmin; // 是否是超级管理员
     id = map['id'];
     username = map['username'];
     tel = map['tel'];
@@ -126,14 +123,12 @@ class User {
     realname = map['realname'];
     nickname = map['nickname'];
     hasPassword = map['has_password'] ?? false;
-    superAdmin = map['super_admin'] ?? false;
+    isSuperAdmin = map['super_admin'] ?? false;
     login = id != null ? id! > 0 : false;
   }
 
   _setRole(Map map) {
-    // List<String>? roles;
-    // List? rolesAll;
-    roles = map['roles'];
+    roleNames = map['roles'];
     rolesAll = map['rolesAll'];
   }
 

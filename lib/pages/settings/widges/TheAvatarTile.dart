@@ -26,7 +26,7 @@ class _TheAvatarTileState extends State<TheAvatarTile> {
   @override
   void initState() {
     super.initState();
-    _user = User.cache();
+    _user = User.cached();
   }
 
   @override

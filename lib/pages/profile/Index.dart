@@ -20,7 +20,7 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
 
   @override
   void initState() {
-    _user = User.cache();
+    _user = User.cached();
     super.initState();
   }
 

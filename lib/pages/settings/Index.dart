@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
+import 'package:app/app/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';
+import 'package:app/pages/settings/UserRoleListPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/store/User.dart';
@@ -24,7 +26,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> with RouteAware {
-  User _user = User.cache();
+  User _user = User.cached();
   CancelToken? _cancelToken;
 
   @override
@@ -44,7 +46,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
   /// 从上一页返回本页面
   @override
   void didPopNext() {
-    setState(() => _user = User.cache());
+    setState(() => _user = User.cached());
     super.didPopNext();
   }
 
@@ -67,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: Config.pageBackgroudColor,
       appBar: MyAppBar.build(
         title: '设置',
         actions: [
@@ -111,7 +113,16 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           Divider(height: 1),
           SizedBox(height: 15),
           // 角色
-          MyTile(title: '我的角色'),
+          MyTile(
+            title: '我的角色',
+            trailingWidget: Text('查看'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => UserRoleListPage()),
+              );
+            },
+          ),
           Divider(height: 1),
           SizedBox(height: 15),
           // 绑定手机
