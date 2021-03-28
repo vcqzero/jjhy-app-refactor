@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 class MyTile extends StatefulWidget {
   final String title;
   final Widget? trailingWidget;
+  final String? trailingString;
   final void Function()? onTap;
   final Color titleColor;
+
+  /// 如果[trailingWidget] 不为null，优先渲染trailingWidget，
+  /// 否则渲染[trailingString]
   MyTile({
     Key? key,
     required this.title,
     this.trailingWidget,
+    this.trailingString,
     this.onTap,
     this.titleColor = Colors.black,
   }) : super(key: key);
@@ -19,11 +24,25 @@ class MyTile extends StatefulWidget {
 
 class _MyTileState extends State<MyTile> {
   List<Widget> _handleBuildTrailing() {
-    List<Widget> list = [
-      Icon(Icons.chevron_right),
-    ];
+    List<Widget> list = [];
+    // 优选渲染trailingWidget
     if (widget.trailingWidget != null) {
-      list.insert(0, widget.trailingWidget!);
+      list.add(widget.trailingWidget!);
+    } else {
+      list.add(
+        Container(
+          width: 180,
+          alignment: Alignment.centerRight,
+          child: Text(
+            widget.trailingString ?? '-',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      );
+    }
+    // 添加向右箭头
+    if (widget.onTap != null) {
+      list.add(Icon(Icons.chevron_right));
     }
     return list;
   }

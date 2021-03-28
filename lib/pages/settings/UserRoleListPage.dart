@@ -18,29 +18,58 @@ class UserRoleListPage extends StatefulWidget {
 }
 
 class _UserRoleListPageState extends State<UserRoleListPage> {
-  List<Widget> _handleGetRolesChileren() {
+  List<Widget> _renderRolesTile() {
     MyRoles myRoles = MyRoles();
-    List<Widget> children = [];
+    List<Widget> children = [
+      SizedBox(height: 15),
+    ];
+
     // 项目管理员
     if (widget._user.isSuperAdmin) {
-      children.add(MyTile(title: myRoles.getLabel('super_admin') ?? ''));
+      children.add(MyTile(
+        title: myRoles.getLabel('super_admin'),
+      ));
     }
+
     // 项目相关角色
+    List rolesAll = widget._user.rolesAll ?? [];
+    List<Map> workyardRoles = myRoles.getWorkyardRoles(rolesAll);
+    if (workyardRoles.isNotEmpty) {
+      print(workyardRoles);
+      children.add(SizedBox(height: 15));
+      workyardRoles.forEach((Map item) {
+        if (item['workyard'] != null) {
+          children.add(MyTile(
+            title: myRoles.getLabel(item['role']),
+            trailingString: item['workyard']['name'],
+          ));
+          children.add(Divider(height: 1));
+        }
+      });
+    }
 
     // 公司相关角色
+    // List<Map> companyRoles = myRoles.getCompanyRoles(rolesAll);
+    // if (workyardRoles.isNotEmpty) {
+    //   children.add(SizedBox(height: 15));
+    //   workyardRoles.forEach((Map item) {
+    //     children.add(MyTile(
+    //       title: myRoles.getLabel(item['role']),
+    //     ));
+    //     children.add(Divider(height: 1));
+    //   });
+    // }
     return children;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Config.pageBackgroudColor,
-        appBar: MyAppBar.build(title: '我的角色'),
-        body: Container(
-          padding: EdgeInsets.fromLTRB(12, 12, 12, 0),
-          child: Column(
-            children: _handleGetRolesChileren(),
-          ),
-        ));
+      backgroundColor: Config.pageBackgroudColor,
+      appBar: MyAppBar.build(title: '我的角色'),
+      body: Column(
+        children: _renderRolesTile(),
+      ),
+    );
   }
 }

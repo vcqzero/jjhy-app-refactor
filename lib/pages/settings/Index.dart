@@ -92,14 +92,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 昵称
           MyTile(
               title: '昵称',
-              trailingWidget: Container(
-                alignment: Alignment.centerRight,
-                width: 170,
-                child: Text(
-                  _user.nickname ?? '',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+              trailingString: _user.nickname,
               onTap: () {
                 Navigator.push(
                   context,

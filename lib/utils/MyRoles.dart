@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class MyRoles {
   Map<String, String> _roleLabelsMap = {
     'workyard_admin': '项目管理员',
@@ -10,8 +12,9 @@ class MyRoles {
   };
 
   /// 获取role's label
-  String? getLabel(String roleName) {
-    return _roleLabelsMap[roleName];
+  String getLabel(String? roleName) {
+    if (roleName == null) return '';
+    return _roleLabelsMap[roleName] ?? '-';
   }
 
   /// 是否是项目相关角色
@@ -25,24 +28,34 @@ class MyRoles {
   }
 
   /// 获取所有项目角色信息
-  List getWorkyardRoles(List<Map> rolesAll) {
-    List roles = [];
-    rolesAll.forEach((roleItem) {
-      if (isWorkyardRole(roleItem['role'])) {
-        roles.add(roleItem);
-      }
-    });
+  List<Map> getWorkyardRoles(List rolesAll) {
+    List<Map> roles = [];
+    try {
+      rolesAll.forEach((roleItem) {
+        if (isWorkyardRole(roleItem['role'])) {
+          roles.add(roleItem);
+        }
+      });
+    } catch (e) {
+      log('发生错误', error: e);
+    }
+
     return roles;
   }
 
   /// 获取所有公司角色信息
-  List getCompanyRoles(List<Map> rolesAll) {
-    List roles = [];
-    rolesAll.forEach((roleItem) {
-      if (isCompanyRole(roleItem['role'])) {
-        roles.add(roleItem);
-      }
-    });
+  List<Map> getCompanyRoles(List rolesAll) {
+    List<Map> roles = [];
+    try {
+      rolesAll.forEach((roleItem) {
+        if (isCompanyRole(roleItem['role'])) {
+          roles.add(roleItem);
+        }
+      });
+    } catch (e) {
+      log('发送错误', error: e);
+    }
+
     return roles;
   }
 }
