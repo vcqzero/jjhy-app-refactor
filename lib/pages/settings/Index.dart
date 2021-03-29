@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
-import 'package:app/app/Config.dart';
+import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';

@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'package:app/app/Config.dart';
-import 'package:app/app/routes.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyLoading.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,8 @@ import 'package:app/utils/MyToast.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_storage/get_storage.dart';
+import 'config/Config.dart';
+import 'config/routes.dart';
 import 'pages/home/Index.dart';
 import './pages/todo/Index.dart';
 import './pages/profile/Index.dart';

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:app/api/UserApi.dart';
-import 'package:app/app/Config.dart';
+import 'package:app/config/Config.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyLoading.dart';

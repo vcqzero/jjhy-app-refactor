@@ -1,5 +1,5 @@
-import 'package:app/app/Config.dart';
 import 'package:app/assets/ImageAssets.dart';
+import 'package:app/config/Config.dart';
 import 'package:app/pages/about/PrivacyPage.dart';
 import 'package:app/pages/about/widgets/TheVersionList.dart';
 import 'package:app/widgets/MyAppBar.dart';
