@@ -28,13 +28,13 @@ class _MyTileState extends State<MyTile> {
     // 优选渲染trailingWidget
     if (widget.trailingWidget != null) {
       list.add(widget.trailingWidget!);
-    } else {
+    } else if (widget.trailingString != null) {
       list.add(
         Container(
           width: 180,
           alignment: Alignment.centerRight,
           child: Text(
-            widget.trailingString ?? '-',
+            widget.trailingString!,
             overflow: TextOverflow.ellipsis,
           ),
         ),
