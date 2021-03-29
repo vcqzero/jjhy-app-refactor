@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:app/api/UserApi.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyReg.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyButton.dart';
@@ -12,9 +13,14 @@ import 'package:flutter/material.dart';
 class EditUserInfoPage extends StatefulWidget {
   static const routeName = "EditUserInfoPage";
   final String? val;
+
+  /// 是否是修改username
+  final bool editUsername;
+
   EditUserInfoPage({
     Key? key,
     this.val,
+    this.editUsername = false,
   }) : super(key: key);
 
   @override
@@ -41,22 +47,34 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
   }
 
   _handleInputChange(String val) {
-    int maxLen = 20;
-    bool isOverLen = val.length > maxLen;
     setState(() {
       // 按钮是否disabled
-      _disabled = val.isEmpty || val == widget.val || isOverLen;
+      bool valid = widget.editUsername
+          ? MyReg.validUsername(val)
+          : MyReg.validNickname(val);
+      _disabled = val.isEmpty || val == widget.val || !valid;
       // 是否长度
-      _helper = isOverLen ? '长度不可超过$maxLen个字符' : null;
+      _helper = MyReg.errMsg;
     });
   }
 
   Future<void> _handleUpdate() async {
     String val = _textEditingController.text;
     setState(() => {_loading = true});
-    MyResponse res = UserApi.updateBasicInfo(nickname: val);
-    _cancelToken = res.cancelToken;
     try {
+      MyResponse res;
+      // 验证用户名是否可用
+      if (widget.editUsername) {
+        res = UserApi.validUsername(val);
+        _cancelToken = res.cancelToken;
+        bool valid = await res.future.then((value) => value.data['valid']);
+        if (!valid) return MyToast.show('该名称已占用，请更换！');
+      }
+      // 更新
+      res = widget.editUsername
+          ? UserApi.updateBasicInfo(username: val)
+          : UserApi.updateBasicInfo(nickname: val);
+      _cancelToken = res.cancelToken;
       await res.future.then((value) => null);
       await User.reload();
       MyToast.show('修改成功');

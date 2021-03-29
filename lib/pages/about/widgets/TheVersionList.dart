@@ -95,7 +95,10 @@ class _TheVersionListState extends State<TheVersionList> {
   Widget build(BuildContext context) {
     final bool hasNewVersion = _newVersion != null;
     return ListTile(
-      leading: Icon(Icons.copyright_sharp),
+      leading: Icon(
+        Icons.copyright_sharp,
+        color: Colors.blue,
+      ),
       title: Text("版本: v${_curVersionName ?? ''}"),
       trailing: hasNewVersion
           ? Container(

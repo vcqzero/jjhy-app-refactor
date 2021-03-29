@@ -51,7 +51,10 @@ class _AboutPageState extends State<AboutPage> {
             child: Column(
               children: [
                 ListTile(
-                  leading: Icon(Icons.privacy_tip_outlined),
+                  leading: Icon(
+                    Icons.privacy_tip_outlined,
+                    color: Colors.blue,
+                  ),
                   title: Text('隐私条款'),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () =>

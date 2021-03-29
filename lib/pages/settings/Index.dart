@@ -5,6 +5,7 @@ import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';
+import 'package:app/pages/settings/SecurityPage.dart';
 import 'package:app/pages/settings/UserRoleListPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
@@ -97,9 +98,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditUserInfoPage(
-                      val: _user.nickname,
-                    ),
+                    builder: (context) => EditUserInfoPage(val: _user.nickname),
                   ),
                 );
               }),
@@ -108,7 +107,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 角色
           MyTile(
             title: '我的角色',
-            trailingWidget: Text('查看'),
+            trailingString: '查看',
             onTap: () {
               Navigator.push(
                 context,
@@ -120,13 +119,40 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           SizedBox(height: 15),
           // 绑定手机
           MyTile(
-              title: '绑定手机', trailingWidget: Text(_user.telEncryption ?? '')),
+            title: '绑定手机',
+            trailingString: _user.telEncryption,
+          ),
           Divider(height: 1),
           // 账号
-          MyTile(title: '我的账号', trailingWidget: Text(_user.username ?? '')),
+          MyTile(
+            title: '我的账号',
+            trailingString: _user.username,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditUserInfoPage(
+                    val: _user.username,
+                    editUsername: true,
+                  ),
+                ),
+              );
+            },
+          ),
           Divider(height: 1),
           // 账号密码
-          MyTile(title: '账号密码'),
+          MyTile(
+            title: '账号密码',
+            trailingString: _user.hasPassword ? '未设置' : '修改',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SecurityPage(),
+                ),
+              );
+            },
+          ),
           Divider(height: 1),
           // 推送功能
           SizedBox(height: 15),

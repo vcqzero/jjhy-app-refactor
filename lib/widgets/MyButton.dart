@@ -47,7 +47,7 @@ class MyButton extends StatelessWidget {
       return Text(
         label,
         style: TextStyle(
-          color: Colors.white,
+          color: isElevated ? Colors.white : Colors.blue,
         ),
       );
     }
