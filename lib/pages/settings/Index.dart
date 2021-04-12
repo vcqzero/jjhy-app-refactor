@@ -4,6 +4,7 @@ import 'package:app/api/AuthApi.dart';
 import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
+import 'package:app/pages/security/SafetyVerificationPage.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:app/pages/settings/UserRoleListPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
@@ -120,13 +121,25 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           SizedBox(height: 15),
           // 绑定手机
           MyTile(
-              title: '绑定手机', trailingWidget: Text(_user.telEncryption ?? '')),
+              title: '绑定手机',
+              trailingWidget: Text(_user.telEncryption ?? '未绑定')),
           Divider(height: 1),
           // 账号
           MyTile(title: '我的账号', trailingWidget: Text(_user.username ?? '')),
           Divider(height: 1),
           // 账号密码
-          MyTile(title: '账号密码'),
+          MyTile(
+            title: '账号密码',
+            trailingString: '修改密码',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SafetyVerificationPage(),
+                ),
+              );
+            },
+          ),
           Divider(height: 1),
           // 推送功能
           SizedBox(height: 15),
