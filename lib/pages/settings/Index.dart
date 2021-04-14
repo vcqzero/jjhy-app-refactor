@@ -98,9 +98,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditUserInfoPage(
-                      val: _user.nickname,
-                    ),
+                    builder: (context) => EditUserInfoPage(val: _user.nickname),
                   ),
                 );
               }),
@@ -109,7 +107,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 角色
           MyTile(
             title: '我的角色',
-            trailingWidget: Text('查看'),
+            trailingString: '查看',
             onTap: () {
               Navigator.push(
                 context,
@@ -125,12 +123,26 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               trailingWidget: Text(_user.telEncryption ?? '未绑定')),
           Divider(height: 1),
           // 账号
-          MyTile(title: '我的账号', trailingWidget: Text(_user.username ?? '')),
+          MyTile(
+            title: '我的账号',
+            trailingString: _user.username,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EditUserInfoPage(
+                    val: _user.username,
+                    editUsername: true,
+                  ),
+                ),
+              );
+            },
+          ),
           Divider(height: 1),
           // 账号密码
           MyTile(
             title: '账号密码',
-            trailingString: '修改密码',
+            trailingString: _user.hasPassword ? '未设置' : '修改',
             onTap: () {
               Navigator.push(
                 context,

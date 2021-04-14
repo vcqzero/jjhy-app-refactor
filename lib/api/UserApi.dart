@@ -25,6 +25,17 @@ class UserApi {
     return MyResponse(future: future, cancelToken: cancelToken);
   }
 
+  /// 验证用户名是否可用
+  static MyResponse validUsername(String username) {
+    CancelToken cancelToken = CancelToken();
+    final future = _dio.get(
+      '/users/validation/username',
+      cancelToken: cancelToken,
+      queryParameters: {'username': username},
+    );
+    return MyResponse(future: future, cancelToken: cancelToken);
+  }
+
   /// 修改用户username realname nickname password
   static MyResponse updateBasicInfo({
     String? username,
