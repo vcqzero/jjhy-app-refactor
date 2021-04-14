@@ -53,8 +53,17 @@ class _HomePageState extends State<HomePage> {
 
   /// 加载banner
   Widget _renderBannerImage() {
-    if (imageUrl == null) return Image.asset(ImageAssets.defaultBannerImage);
-    return Image.network(imageUrl!);
+    if (imageUrl == null) {
+      return Image.asset(ImageAssets.defaultBannerImage);
+    } else {
+      return Image.network(
+        imageUrl!,
+        errorBuilder:
+            (BuildContext context, Object exception, StackTrace? stackTrace) {
+          return Image.asset(ImageAssets.defaultBannerImage);
+        },
+      );
+    }
   }
 
   @override
