@@ -4,7 +4,7 @@ import 'package:app/api/UserApi.dart';
 import 'package:app/config/Config.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
-import 'package:app/utils/MyLoading.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyTile.dart';
 import 'package:dio/dio.dart';
@@ -55,7 +55,7 @@ class _TheAvatarTileState extends State<TheAvatarTile> {
         return MyToast.show('所选图片多大');
       }
       // start loading
-      MyLoading.showLoading('上传中');
+      MyEasyLoading.loading('上传中');
       FormData formData = FormData.fromMap({'avatar': file});
       MyResponse res = UserApi.updateAvatar(formData);
       _cancelToken = res.cancelToken;
@@ -69,7 +69,7 @@ class _TheAvatarTileState extends State<TheAvatarTile> {
     } on DioError catch (e) {
       log('上传头像错误', error: e);
     } finally {
-      MyLoading.hide();
+      MyEasyLoading.hide();
     }
   }
 

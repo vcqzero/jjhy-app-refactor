@@ -5,7 +5,7 @@ import 'package:app/main.dart';
 import 'package:app/store/LoginFormStore.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
-import 'package:app/utils/MyLoading.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/utils/MyString.dart';
@@ -95,7 +95,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     if (_authLoging) return;
     // start loading
     _authLoging = true;
-    MyLoading.showLoading("登录中...");
+    MyEasyLoading.loading("登录中...");
 
     // api
     String phone = widget.phone;
@@ -119,7 +119,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     } finally {
       // hide loading
       _authLoging = false;
-      MyLoading.hide();
+      MyEasyLoading.hide();
     }
   }
 
@@ -131,17 +131,17 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
 
       // loading
       _resondLoading = true;
-      MyLoading.showLoading('发送中...');
+      MyEasyLoading.loading('发送中...');
       final data = await res.future.then((value) => value.data);
       int codeCount = data['codeCount'];
       int delaySeconds = data['delaySeconds'];
       _handleResetState(codeLen: codeCount, delaySeconds: delaySeconds);
 
       // loading
-      MyLoading.hide();
-      MyLoading.success('发送成功');
+      MyEasyLoading.hide();
+      MyEasyLoading.success('发送成功');
     } on DioError catch (e) {
-      MyLoading.hide();
+      MyEasyLoading.hide();
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('网络错误，请稍后重试');
     } finally {

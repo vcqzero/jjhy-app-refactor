@@ -1,5 +1,6 @@
 import 'package:app/config/Config.dart';
 import 'package:app/store/User.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyString.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:app/widgets/MyAppBar.dart';
@@ -41,7 +42,7 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
       valid = _user.tel == val;
     }
     if (!valid) {
-      MyToast.show('验证错误');
+      MyEasyLoading.toast('验证错误');
     }
   }
 
@@ -55,9 +56,11 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
         child: Column(
           children: [
             TextField(
+              autofocus: true,
               keyboardType: _verifyPassword ? null : TextInputType.phone,
               controller: _controller,
               decoration: InputDecoration(
+                hintText: '输入验证内容',
                 helperText: _verifyPassword
                     ? '请输入密码'
                     : '请补全手机号' + MyString.encryptPhone(_user.tel ?? ''),
@@ -73,16 +76,18 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
             ),
             Container(
               alignment: Alignment.centerRight,
-              child: MyButton.text(
-                label: _verifyPassword ? '验证手机号' : '验证密码',
-                fullWidth: false,
-                onPressed: () {
-                  setState(() {
-                    _verifyPassword = !_verifyPassword;
-                    _controller.clear();
-                  });
-                },
-              ),
+              child: _user.hasPassword && _user.tel != null
+                  ? MyButton.text(
+                      label: _verifyPassword ? '验证手机号' : '验证密码',
+                      fullWidth: false,
+                      onPressed: () {
+                        setState(() {
+                          _verifyPassword = !_verifyPassword;
+                          _controller.clear();
+                        });
+                      },
+                    )
+                  : null,
             )
           ],
         ),

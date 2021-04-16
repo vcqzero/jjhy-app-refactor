@@ -1,6 +1,6 @@
 import 'dart:developer';
 import 'package:app/store/User.dart';
-import 'package:app/utils/MyLoading.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -21,7 +21,7 @@ void main() async {
   ]);
   // init app
   log('main-> init App');
-  MyLoading.config();
+  MyEasyLoading.config();
   User.reload();
 }
 

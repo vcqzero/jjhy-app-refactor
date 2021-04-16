@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:app/config/Config.dart';
-import 'package:app/utils/MyLoading.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/platform_interface.dart';
@@ -25,17 +25,17 @@ class _PrivacyPageState extends State<PrivacyPage> {
             return WebView(
               initialUrl: Config.privacyUrl,
               javascriptMode: JavascriptMode.unrestricted,
-              onPageStarted: (url) => MyLoading.showLoading(null),
-              onPageFinished: (url) => MyLoading.hide(),
+              onPageStarted: (url) => MyEasyLoading.loading(null),
+              onPageFinished: (url) => MyEasyLoading.hide(),
               onWebResourceError: (WebResourceError err) {
                 log('加载错误', error: err);
-                MyLoading.hide();
+                MyEasyLoading.hide();
               },
             );
           }),
         ),
         onWillPop: () {
-          MyLoading.hide();
+          MyEasyLoading.hide();
           return Future.value(true);
         });
   }

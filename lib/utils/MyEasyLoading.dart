@@ -1,6 +1,6 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class MyLoading {
+class MyEasyLoading {
   // 配置loading
   static config() {
     EasyLoading.instance..indicatorType = EasyLoadingIndicatorType.threeBounce;
@@ -8,7 +8,7 @@ class MyLoading {
   }
 
   // 显示loading
-  static showLoading(String? status) {
+  static loading(String? status) {
     EasyLoading.show(status: status);
   }
 
@@ -20,5 +20,10 @@ class MyLoading {
   // 显示success
   static success(status) {
     EasyLoading.showSuccess(status);
+  }
+
+  /// 显示toast
+  static toast(String msg) {
+    EasyLoading.showToast(msg);
   }
 }

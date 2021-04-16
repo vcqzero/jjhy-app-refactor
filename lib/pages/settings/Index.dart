@@ -12,7 +12,7 @@ import 'package:app/store/Token.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDialog.dart';
 import 'package:app/utils/MyDio.dart';
-import 'package:app/utils/MyLoading.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyTile.dart';
 import 'package:dio/dio.dart';
@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
   void dispose() {
     routeObserver.unsubscribe(this);
     if (_cancelToken != null) _cancelToken!.cancel();
-    MyLoading.hide();
+    MyEasyLoading.hide();
     super.dispose();
   }
 
@@ -52,7 +52,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
   }
 
   Future<void> _handleLogout() async {
-    MyLoading.showLoading('退出中...');
+    MyEasyLoading.loading('退出中...');
     MyResponse res = AuthApi.logout();
     _cancelToken = res.cancelToken;
     try {
@@ -63,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
     } catch (e) {
       log('退出登录错误', error: e);
     } finally {
-      MyLoading.hide();
+      MyEasyLoading.hide();
     }
   }
 
@@ -142,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 账号密码
           MyTile(
             title: '账号密码',
-            trailingString: _user.hasPassword ? '未设置' : '修改',
+            trailingString: _user.hasPassword ? '修改' : '未设置',
             onTap: () {
               Navigator.push(
                 context,
