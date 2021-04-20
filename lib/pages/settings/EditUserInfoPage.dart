@@ -10,17 +10,18 @@ import 'package:app/widgets/MyButton.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
+enum EditUserInfoAttrs { username, nickname }
+
 class EditUserInfoPage extends StatefulWidget {
   static const routeName = "EditUserInfoPage";
   final String? val;
 
-  /// 是否是修改username
-  final bool editUsername;
+  final EditUserInfoAttrs attrKey;
 
   EditUserInfoPage({
     Key? key,
     this.val,
-    this.editUsername = false,
+    required this.attrKey,
   }) : super(key: key);
 
   @override
@@ -48,37 +49,66 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
 
   _handleInputChange(String val) {
     setState(() {
-      // 按钮是否disabled
-      bool valid = widget.editUsername
-          ? MyReg.validUsername(val)
-          : MyReg.validNickname(val);
-      _disabled = val.isEmpty || val == widget.val || !valid;
-      // 是否长度
+      bool valid = true;
+      // 验证数据
+      switch (widget.attrKey) {
+        case EditUserInfoAttrs.nickname:
+          valid = MyReg.validNickname(val);
+          break;
+        case EditUserInfoAttrs.username:
+          valid = MyReg.validUsername(val);
+          break;
+        default:
+      }
+      _disabled = val.isEmpty || val == widget.val || valid == false;
       _helper = MyReg.errMsg;
     });
   }
 
-  Future<void> _handleUpdate() async {
+  Future<bool> _handleUpdateUsername(String username) async {
+    bool valid = true;
+    MyResponse res;
+    res = UserApi.validUsername(username);
+    _cancelToken = res.cancelToken;
+    valid = await res.future.then((value) => value.data['valid']);
+    if (valid == false) {
+      MyToast.show('该名称已占用，请更换！');
+      return false;
+    }
+    // 更新
+    res = UserApi.updateBasicInfo(username: username);
+    _cancelToken = res.cancelToken;
+    await res.future.then((value) => null);
+    return true;
+  }
+
+  Future<bool> _handleUpdateNickname(String nickname) async {
+    MyResponse res = UserApi.updateBasicInfo(nickname: nickname);
+    _cancelToken = res.cancelToken;
+    await res.future.then((value) => null);
+    return true;
+  }
+
+  Future<void> _handleClickConfirm() async {
     String val = _textEditingController.text;
     setState(() => {_loading = true});
+
+    bool success = false;
     try {
-      MyResponse res;
-      // 验证用户名是否可用
-      if (widget.editUsername) {
-        res = UserApi.validUsername(val);
-        _cancelToken = res.cancelToken;
-        bool valid = await res.future.then((value) => value.data['valid']);
-        if (!valid) return MyToast.show('该名称已占用，请更换！');
+      switch (widget.attrKey) {
+        case EditUserInfoAttrs.username:
+          success = await _handleUpdateUsername(val);
+          break;
+        case EditUserInfoAttrs.nickname:
+          success = await _handleUpdateNickname(val);
+          break;
+        default:
       }
-      // 更新
-      res = widget.editUsername
-          ? UserApi.updateBasicInfo(username: val)
-          : UserApi.updateBasicInfo(nickname: val);
-      _cancelToken = res.cancelToken;
-      await res.future.then((value) => null);
-      await User.reload();
-      MyToast.show('修改成功');
-      Navigator.of(context).pop();
+      if (success == true) {
+        await User.reload();
+        MyToast.show('修改成功');
+        Navigator.of(context).pop();
+      }
     } catch (e) {
       log('更新用户信息错误', error: e);
       MyToast.show('系统错误，请重试');
@@ -105,7 +135,7 @@ class _EditUserInfoPageState extends State<EditUserInfoPage> {
               SizedBox(height: 10),
               MyButton.elevated(
                 label: '确认提交',
-                onPressed: _handleUpdate,
+                onPressed: _handleClickConfirm,
                 disabled: _disabled,
                 loading: _loading,
               )

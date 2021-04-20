@@ -24,6 +24,6 @@ class MyEasyLoading {
 
   /// 显示toast
   static toast(String msg) {
-    EasyLoading.showToast(msg);
+    if (msg.isNotEmpty) EasyLoading.showToast(msg);
   }
 }

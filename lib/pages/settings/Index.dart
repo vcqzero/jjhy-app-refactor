@@ -4,6 +4,7 @@ import 'package:app/api/AuthApi.dart';
 import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
+import 'package:app/pages/common/TheSingleInput.dart';
 import 'package:app/pages/security/SafetyVerificationPage.dart';
 import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:app/pages/settings/UserRoleListPage.dart';
@@ -13,6 +14,7 @@ import 'package:app/store/User.dart';
 import 'package:app/utils/MyDialog.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyEasyLoading.dart';
+import 'package:app/utils/MyReg.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyTile.dart';
 import 'package:dio/dio.dart';
@@ -93,12 +95,17 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 昵称
           MyTile(
               title: '昵称',
-              trailingString: _user.nickname,
+              trailingString: _user.nickname ?? '未设置',
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditUserInfoPage(val: _user.nickname),
+                    builder: (context) => TheSingleInputPage(
+                      val: _user.nickname,
+                      title: '修改昵称',
+                      placeholder: '请输入新昵称',
+                      regValidFun: MyReg.validNickname,
+                    ),
                   ),
                 );
               }),
@@ -131,9 +138,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
                 context,
                 MaterialPageRoute(
                   builder: (context) => EditUserInfoPage(
-                    val: _user.username,
-                    editUsername: true,
-                  ),
+                      val: _user.username, attrKey: EditUserInfoAttrs.username),
                 ),
               );
             },
