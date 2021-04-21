@@ -12,7 +12,11 @@ class TheInputDioRes {
   final bool success;
   final String? errMsg;
   final String? successMsg;
-  const TheInputDioRes(this.success, this.errMsg, this.successMsg);
+  TheInputDioRes({
+    required this.success,
+    this.errMsg,
+    this.successMsg,
+  });
 }
 
 class TheSingleInputPage extends StatefulWidget {
@@ -34,6 +38,8 @@ class TheSingleInputPage extends StatefulWidget {
   /// 数据修改
   final Future<TheInputDioRes> Function(String sta)? onSubmit;
 
+  final void Function()? cancelTokenOnPop;
+
   TheSingleInputPage({
     Key? key,
     this.val,
@@ -42,6 +48,7 @@ class TheSingleInputPage extends StatefulWidget {
     this.regValidFun,
     this.remoteValidFun,
     this.onSubmit,
+    this.cancelTokenOnPop,
   }) : super(key: key);
 
   @override
@@ -53,7 +60,6 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
   bool _loading = false;
   TextEditingController _textEditingController = TextEditingController();
   String? _helper;
-  CancelToken? _cancelToken;
 
   @override
   void initState() {
@@ -63,7 +69,7 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
 
   @override
   void dispose() {
-    if (_cancelToken != null) _cancelToken!.cancel();
+    if (widget.cancelTokenOnPop != null) widget.cancelTokenOnPop!();
     super.dispose();
   }
 
@@ -84,6 +90,7 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
       try {
         setState(() => {_loading = true});
         TheInputDioRes res = await widget.remoteValidFun!(val);
+
         if (res.success != true) {
           if (res.errMsg != null) MyEasyLoading.toast(res.errMsg!);
           return;

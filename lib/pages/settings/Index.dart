@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:app/api/AuthApi.dart';
+import 'package:app/api/UserApi.dart';
 import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
 import 'package:app/pages/common/TheSingleInput.dart';
 import 'package:app/pages/security/SafetyVerificationPage.dart';
-import 'package:app/pages/settings/EditUserInfoPage.dart';
 import 'package:app/pages/settings/UserRoleListPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
@@ -105,6 +105,17 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
                       title: '修改昵称',
                       placeholder: '请输入新昵称',
                       regValidFun: MyReg.validNickname,
+                      onSubmit: (String nickname) async {
+                        MyResponse res =
+                            UserApi.updateBasicInfo(nickname: nickname);
+                        _cancelToken = res.cancelToken;
+                        await res.future.then((value) => null);
+                        await User.reload();
+                        return TheInputDioRes(success: true);
+                      },
+                      cancelTokenOnPop: () {
+                        if (_cancelToken != null) _cancelToken!.cancel();
+                      },
                     ),
                   ),
                 );
@@ -137,8 +148,36 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => EditUserInfoPage(
-                      val: _user.username, attrKey: EditUserInfoAttrs.username),
+                  builder: (context) => TheSingleInputPage(
+                    val: _user.username,
+                    title: '修改用户名',
+                    placeholder: '请输入新用户名',
+                    regValidFun: MyReg.validUsername,
+
+                    /// 提交数据
+                    onSubmit: (String username) async {
+                      MyResponse res =
+                          UserApi.updateBasicInfo(username: username);
+                      _cancelToken = res.cancelToken;
+                      await res.future.then((value) => null);
+                      await User.reload();
+                      return TheInputDioRes(success: true);
+                    },
+
+                    /// 远程验证
+                    remoteValidFun: (String username) async {
+                      MyResponse res = UserApi.validUsername(username);
+                      _cancelToken = res.cancelToken;
+                      bool valid =
+                          await res.future.then((value) => value.data['valid']);
+                      return TheInputDioRes(success: valid, errMsg: '用户名已占用');
+                    },
+
+                    /// cancel token
+                    cancelTokenOnPop: () {
+                      if (_cancelToken != null) _cancelToken!.cancel();
+                    },
+                  ),
                 ),
               );
             },
