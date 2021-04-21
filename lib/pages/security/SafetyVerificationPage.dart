@@ -1,4 +1,5 @@
 import 'package:app/config/Config.dart';
+import 'package:app/pages/common/TheSingleInput.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyString.dart';
@@ -42,7 +43,15 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
     }
     if (!valid) {
       MyEasyLoading.toast('验证错误');
+      return;
     }
+    // 验证成功
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (content) => TheSingleInputPage(),
+      ),
+    );
   }
 
   @override

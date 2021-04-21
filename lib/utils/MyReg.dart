@@ -34,4 +34,11 @@ class MyReg {
     errMsg = valid ? null : "长度不可超过$maxLen个字符";
     return valid;
   }
+
+  /// 验证password
+  static bool validPassword(String str) {
+    bool valid = RegExp(r"^(?:\d+|[a-zA-Z]+|[!@#$%^&-_*]+){6}$").hasMatch(str);
+    errMsg = valid ? null : "纯数字 或 字母 或 特殊字符,至少6位";
+    return valid;
+  }
 }
