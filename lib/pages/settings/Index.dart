@@ -191,7 +191,25 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => SafetyVerificationPage(),
+                  builder: (context) => SafetyVerificationPage(
+                    replacePage: TheSingleInputPage(
+                      title: '设置新密码',
+                      placeholder: '请输入新密码',
+
+                      /// 验证
+                      regValidFun: MyReg.validPassword,
+
+                      /// 修改
+                      onSubmit: (String password) async {
+                        MyResponse res =
+                            UserApi.updateBasicInfo(password: password);
+                        _cancelToken = res.cancelToken;
+                        await res.future.then((value) => null);
+                        await User.reload();
+                        return TheInputDioRes(success: true);
+                      },
+                    ),
+                  ),
                 ),
               );
             },

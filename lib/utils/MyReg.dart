@@ -14,7 +14,7 @@ class MyReg {
   }
 
   /// 验证密码
-  static bool validPasswork(String str) {
+  static bool validPassword(String str) {
     bool valid = RegExp(r"^(?:\d+|[a-zA-Z]+|[!@#$%^&-_*]+){6}$").hasMatch(str);
     errMsg = valid ? null : "密码至少6位（字母、数字、!@#\$%^&-_*组合）";
     return valid;
@@ -32,13 +32,6 @@ class MyReg {
     int maxLen = 20;
     bool valid = str.length < maxLen;
     errMsg = valid ? null : "长度不可超过$maxLen个字符";
-    return valid;
-  }
-
-  /// 验证password
-  static bool validPassword(String str) {
-    bool valid = RegExp(r"^(?:\d+|[a-zA-Z]+|[!@#$%^&-_*]+){6}$").hasMatch(str);
-    errMsg = valid ? null : "纯数字 或 字母 或 特殊字符,至少6位";
     return valid;
   }
 }
