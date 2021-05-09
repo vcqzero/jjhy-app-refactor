@@ -37,7 +37,10 @@ class TheSingleInputPage extends StatefulWidget {
   /// 数据修改
   final Future<TheInputDioRes> Function(String sta)? onSubmit;
 
+  /// 当返回上一步时，执行取消dio操作
   final void Function()? cancelTokenOnPop;
+
+  final TextInputType? keyboardType;
 
   TheSingleInputPage({
     Key? key,
@@ -48,6 +51,7 @@ class TheSingleInputPage extends StatefulWidget {
     this.remoteValidFun,
     this.onSubmit,
     this.cancelTokenOnPop,
+    this.keyboardType,
   }) : super(key: key);
 
   @override
@@ -136,6 +140,7 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
               TextField(
                 controller: _textEditingController,
                 onChanged: _handleInputChange,
+                keyboardType: widget.keyboardType,
                 decoration: InputDecoration(
                   helperText: _helper,
                   hintText: widget.placeholder,

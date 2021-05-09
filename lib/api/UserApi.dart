@@ -58,4 +58,19 @@ class UserApi {
     );
     return MyResponse(future: future, cancelToken: cancelToken);
   }
+
+  /// 修改用户手机号
+  static MyResponse updatePhone({
+    required String phone,
+    required String code,
+  }) {
+    // dio
+    CancelToken cancelToken = CancelToken();
+    final future = _dio.put(
+      '/users/me/tel',
+      cancelToken: cancelToken,
+      data: {'tel': phone, 'code': code},
+    );
+    return MyResponse(future: future, cancelToken: cancelToken);
+  }
 }

@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:app/api/AuthApi.dart';
 import 'package:app/api/PhoneApi.dart';
+import 'package:app/api/UserApi.dart';
 import 'package:app/main.dart';
+import 'package:app/pages/settings/Index.dart';
 import 'package:app/store/LoginFormStore.dart';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyDio.dart';
@@ -15,7 +17,16 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 /// 输入全部code之后，下一步动作
-enum ActionhOnInputCode { auth, valid }
+enum ActionhOnInputCode {
+  /// 登录
+  auth,
+
+  /// 验证验证码
+  valid,
+
+  /// 修改手机号
+  updateUserPhone,
+}
 
 /// 输入手机验证码页面
 class TheInputCodePage extends StatefulWidget {
@@ -122,7 +133,6 @@ class _TheInputCodePage extends State<TheInputCodePage> {
     } on DioError catch (e) {
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('手机号或验证码错误');
-      Navigator.of(context).pop();
     } finally {
       // hide loading
       _submitLoading = false;
@@ -143,7 +153,7 @@ class _TheInputCodePage extends State<TheInputCodePage> {
     final future = res.future;
     _cancelToken = res.cancelToken;
     try {
-      final valid = await future.then((value) => value.data.valid);
+      final valid = await future.then((value) => value.data['valid']);
       if (valid != true) throw new Error();
 
       // 返回
@@ -152,7 +162,35 @@ class _TheInputCodePage extends State<TheInputCodePage> {
     } on DioError catch (e) {
       if (e.type == DioErrorType.cancel) return;
       MyToast.show('手机号或验证码错误');
-      Navigator.of(context).pop();
+    } finally {
+      // hide loading
+      _submitLoading = false;
+      MyEasyLoading.hide();
+    }
+  }
+
+  /// 修改用户手机号
+  _updateUserPhone({required String code}) async {
+    if (_submitLoading) return;
+    // start loading
+    _submitLoading = true;
+    MyEasyLoading.loading("提交中...");
+
+    // api
+    String phone = widget.phone;
+    MyResponse res = UserApi.updatePhone(phone: phone, code: code);
+    _cancelToken = res.cancelToken;
+    try {
+      await res.future.then((value) => value.data);
+
+      // 返回
+      MyToast.show('修改成功');
+      await User.reload();
+      Navigator.of(context)
+          .popUntil(ModalRoute.withName(SettingsPage.routeName));
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) return;
+      MyToast.show('手机号或验证码错误');
     } finally {
       // hide loading
       _submitLoading = false;
@@ -200,6 +238,9 @@ class _TheInputCodePage extends State<TheInputCodePage> {
         break;
       case ActionhOnInputCode.valid:
         _validPhoneCode(code: val);
+        break;
+      case ActionhOnInputCode.updateUserPhone:
+        _updateUserPhone(code: val);
         break;
       default:
     }
