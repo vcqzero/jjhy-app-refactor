@@ -1,5 +1,5 @@
 import 'package:app/api/PhoneApi.dart';
-import 'package:app/pages/login/TypeCodePage.dart';
+import 'package:app/pages/common/TheInputCodePage.dart';
 import 'package:app/store/LoginFormStore.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyReg.dart';
@@ -74,10 +74,11 @@ class _ThePhoneSectionState extends State<ThePhoneSection> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => LoginTypeCodePage(
+          builder: (context) => TheInputCodePage(
             phone: phone,
             delaySeconds: delaySeconds,
             codeLen: codeCount,
+            action: ActionhOnInputCode.auth,
           ),
         ),
       );

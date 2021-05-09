@@ -14,25 +14,31 @@ import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
-class LoginTypeCodePage extends StatefulWidget {
-  static String routeName = 'LoginTypeCodePage';
+/// 输入全部code之后，下一步动作
+enum ActionhOnInputCode { auth, valid }
+
+/// 输入手机验证码页面
+class TheInputCodePage extends StatefulWidget {
+  static String routeName = 'TheInputCodePage';
 
   final String phone; // 手机号
   final int delaySeconds; // 再次发送需延长时间
   final int codeLen; // 验证码位数
+  final ActionhOnInputCode action;
 
-  LoginTypeCodePage({
+  TheInputCodePage({
     Key? key,
     required this.phone,
     required this.delaySeconds,
     required this.codeLen,
+    required this.action,
   }) : super(key: key);
 
   @override
-  _LoginTypeCodePage createState() => _LoginTypeCodePage();
+  _TheInputCodePage createState() => _TheInputCodePage();
 }
 
-class _LoginTypeCodePage extends State<LoginTypeCodePage> {
+class _TheInputCodePage extends State<TheInputCodePage> {
   String _code = ''; // 保存输入的验证码
   late int _resendDelaySeconds; // 重新发送剩余时间 秒
   late String _phoneSafety;
@@ -41,7 +47,7 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
   bool _resondLoading = false;
   CancelToken? _cancelToken;
   FocusNode _focusNode = FocusNode();
-  bool _authLoging = false;
+  bool _submitLoading = false; // 验证或登录loading
 
   @override
   void initState() {
@@ -91,10 +97,11 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     super.dispose();
   }
 
+  /// 通过手机验证码登录
   _handleAuthByCode({required String code}) async {
-    if (_authLoging) return;
+    if (_submitLoading) return;
     // start loading
-    _authLoging = true;
+    _submitLoading = true;
     MyEasyLoading.loading("登录中...");
 
     // api
@@ -118,7 +125,37 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
       Navigator.of(context).pop();
     } finally {
       // hide loading
-      _authLoging = false;
+      _submitLoading = false;
+      MyEasyLoading.hide();
+    }
+  }
+
+  /// 验证手机和验证码是否正确
+  _validPhoneCode({required String code}) async {
+    if (_submitLoading) return;
+    // start loading
+    _submitLoading = true;
+    MyEasyLoading.loading("验证中...");
+
+    // api
+    String phone = widget.phone;
+    MyResponse res = PhoneApi.validCode(phone: phone, code: code);
+    final future = res.future;
+    _cancelToken = res.cancelToken;
+    try {
+      final valid = await future.then((value) => value.data.valid);
+      if (valid != true) throw new Error();
+
+      // 返回
+      MyToast.show('验证成功');
+      Navigator.of(context).pop();
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.cancel) return;
+      MyToast.show('手机号或验证码错误');
+      Navigator.of(context).pop();
+    } finally {
+      // hide loading
+      _submitLoading = false;
       MyEasyLoading.hide();
     }
   }
@@ -154,9 +191,18 @@ class _LoginTypeCodePage extends State<LoginTypeCodePage> {
     if (val.length > _codeLen || _code == val) return;
     setState(() => {_code = val});
     if (val.length < _codeLen) return;
-    print('输入完成');
+
+    // 验证码输入完整，进行下一步动作
     _focusNode.unfocus();
-    _handleAuthByCode(code: val);
+    switch (widget.action) {
+      case ActionhOnInputCode.auth:
+        _handleAuthByCode(code: val);
+        break;
+      case ActionhOnInputCode.valid:
+        _validPhoneCode(code: val);
+        break;
+      default:
+    }
   }
 
   @override

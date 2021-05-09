@@ -5,8 +5,9 @@ import 'package:app/api/UserApi.dart';
 import 'package:app/config/Config.dart';
 import 'package:app/main.dart';
 import 'package:app/pages/about/Index.dart';
-import 'package:app/pages/common/TheSingleInput.dart';
+import 'package:app/pages/common/TheSingleInputPage.dart';
 import 'package:app/pages/security/SafetyVerificationPage.dart';
+import 'package:app/pages/settings/EditUserPhone.dart';
 import 'package:app/pages/settings/UserRoleListPage.dart';
 import 'package:app/pages/settings/widges/TheAvatarTile.dart';
 import 'package:app/store/Token.dart';
@@ -137,8 +138,20 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           SizedBox(height: 15),
           // 绑定手机
           MyTile(
-              title: '绑定手机',
-              trailingWidget: Text(_user.telEncryption ?? '未绑定')),
+            title: '绑定手机',
+            trailingWidget: Text(_user.telEncryption ?? '未绑定'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SafetyVerificationPage(
+                    redirectPage: SettingsEditUserPhone(),
+                  ),
+                ),
+              );
+            },
+          ),
+
           Divider(height: 1),
           // 账号
           MyTile(
@@ -192,7 +205,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
                 context,
                 MaterialPageRoute(
                   builder: (context) => SafetyVerificationPage(
-                    replacePage: TheSingleInputPage(
+                    redirectPage: TheSingleInputPage(
                       title: '设置新密码',
                       placeholder: '请输入新密码',
 

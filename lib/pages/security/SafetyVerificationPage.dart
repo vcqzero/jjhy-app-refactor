@@ -10,10 +10,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class SafetyVerificationPage extends StatefulWidget {
-  final Widget? replacePage;
+  final Widget? redirectPage;
   SafetyVerificationPage({
     Key? key,
-    this.replacePage,
+    this.redirectPage,
   }) : super(key: key);
 
   @override
@@ -68,12 +68,12 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
       return;
     } else {
       // 验证成功
-      if (widget.replacePage == null) return;
+      if (widget.redirectPage == null) return;
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder: (content) {
-            return widget.replacePage!;
+            return widget.redirectPage!;
           },
         ),
       );
@@ -94,7 +94,7 @@ class _SafetyVerificationPageState extends State<SafetyVerificationPage> {
               keyboardType: _verifyPassword ? null : TextInputType.phone,
               controller: _controller,
               decoration: InputDecoration(
-                hintText: '输入验证内容',
+                hintText: '请输入...',
                 helperText: _verifyPassword
                     ? '请输入密码'
                     : '请补全手机号' + MyString.encryptPhone(_user.tel ?? ''),
