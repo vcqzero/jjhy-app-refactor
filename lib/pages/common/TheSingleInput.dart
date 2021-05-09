@@ -4,7 +4,6 @@ import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyReg.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyButton.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class TheInputDioRes {
