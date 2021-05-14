@@ -39,6 +39,7 @@ dependencies:
   path_provider: ^2.0.1
   open_file: ^3.1.0
   image_picker: ^0.7.3
+  flutter_svg: ^0.22.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,7 @@ flutter:
     - lib/assets/default_banner.jpeg
     - lib/assets/logo_in_login.png
     - lib/assets/logo_in_about.png
+    - lib/assets/svg/workyard.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

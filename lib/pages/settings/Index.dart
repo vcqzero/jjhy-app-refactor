@@ -92,36 +92,35 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           Divider(height: 1),
           // 头像
           TheAvatarTile(),
-          Divider(height: 1),
           // 昵称
           MyTile(
-              title: '昵称',
-              trailingString: _user.nickname ?? '未设置',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => TheSingleInputPage(
-                      val: _user.nickname,
-                      title: '修改昵称',
-                      placeholder: '请输入新昵称',
-                      regValidFun: MyReg.validNickname,
-                      onSubmit: (String nickname) async {
-                        MyResponse res =
-                            UserApi.updateBasicInfo(nickname: nickname);
-                        _cancelToken = res.cancelToken;
-                        await res.future.then((value) => null);
-                        await User.reload();
-                        return TheInputDioRes(success: true);
-                      },
-                      cancelTokenOnPop: () {
-                        if (_cancelToken != null) _cancelToken!.cancel();
-                      },
-                    ),
+            title: '昵称',
+            trailingString: _user.nickname ?? '未设置',
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TheSingleInputPage(
+                    val: _user.nickname,
+                    title: '修改昵称',
+                    placeholder: '请输入新昵称',
+                    regValidFun: MyReg.validNickname,
+                    onSubmit: (String nickname) async {
+                      MyResponse res =
+                          UserApi.updateBasicInfo(nickname: nickname);
+                      _cancelToken = res.cancelToken;
+                      await res.future.then((value) => null);
+                      await User.reload();
+                      return TheInputDioRes(success: true);
+                    },
+                    cancelTokenOnPop: () {
+                      if (_cancelToken != null) _cancelToken!.cancel();
+                    },
                   ),
-                );
-              }),
-          Divider(height: 1),
+                ),
+              );
+            },
+          ),
           SizedBox(height: 15),
           // 角色
           MyTile(
@@ -134,7 +133,6 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               );
             },
           ),
-          Divider(height: 1),
           SizedBox(height: 15),
           // 绑定手机
           MyTile(
@@ -152,7 +150,6 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
             },
           ),
 
-          Divider(height: 1),
           // 账号
           MyTile(
             title: '我的账号',
@@ -195,7 +192,6 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               );
             },
           ),
-          Divider(height: 1),
           // 账号密码
           MyTile(
             title: '账号密码',
@@ -227,11 +223,9 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               );
             },
           ),
-          Divider(height: 1),
           // 推送功能
           SizedBox(height: 15),
           MyTile(title: '推送功能'),
-          Divider(height: 1),
           // 安全退出
           SizedBox(height: 15),
           MyTile(
@@ -246,7 +240,6 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
               ).open();
             },
           ),
-          Divider(height: 1),
         ],
       ),
     );

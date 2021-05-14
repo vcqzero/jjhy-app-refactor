@@ -1,4 +1,6 @@
+import 'package:app/assets/ImageAssets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MyTile extends StatefulWidget {
   final String title;
@@ -6,6 +8,8 @@ class MyTile extends StatefulWidget {
   final String? trailingString;
   final void Function()? onTap;
   final Color titleColor;
+  final String? svg;
+  final Color svgColor;
 
   /// 如果[trailingWidget] 不为null，优先渲染trailingWidget，
   /// 否则渲染[trailingString]
@@ -16,6 +20,8 @@ class MyTile extends StatefulWidget {
     this.trailingString,
     this.onTap,
     this.titleColor = Colors.black,
+    this.svg,
+    this.svgColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -49,25 +55,40 @@ class _MyTileState extends State<MyTile> {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      tileColor: Colors.white,
-      title: Text(
-        widget.title,
-        style: TextStyle(
-          color: widget.titleColor,
+    return Column(
+      children: [
+        ListTile(
+          leading: widget.svg != null
+              ? Container(
+                  child: SvgPicture.asset(
+                    widget.svg!,
+                    semanticsLabel: 'svg',
+                    color: widget.svgColor,
+                    width: 32,
+                  ),
+                )
+              : null,
+          tileColor: Colors.white,
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              color: widget.titleColor,
+            ),
+          ),
+          trailing: Container(
+            width: 220,
+            // color: Colors.red,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: _handleBuildTrailing(),
+            ),
+          ),
+          onTap: () {
+            if (widget.onTap != null) widget.onTap!();
+          },
         ),
-      ),
-      trailing: Container(
-        width: 220,
-        // color: Colors.red,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: _handleBuildTrailing(),
-        ),
-      ),
-      onTap: () {
-        if (widget.onTap != null) widget.onTap!();
-      },
+        Divider(height: 1),
+      ],
     );
   }
 }
