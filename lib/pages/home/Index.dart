@@ -1,5 +1,6 @@
 import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
+import 'package:app/pages/common/TheAmapPage.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/widgets/MyAppBar.dart';
@@ -82,12 +83,26 @@ class _HomePageState extends State<HomePage> {
             flex: 1,
             child: GridView.count(
               crossAxisCount: 3,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
               children: [
                 TheIconItem(
                   icon: Icons.wifi,
                   lable: '答题上网',
                   color: Colors.pink[400],
-                )
+                ),
+                TheIconItem(
+                  icon: Icons.wifi,
+                  lable: 'Test',
+                  color: Colors.pink[400],
+                  onTap: () {
+                    print('object');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TheAmapPage()),
+                    );
+                  },
+                ),
               ],
             ),
           )

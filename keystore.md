@@ -11,7 +11,11 @@
 | keystore-别名        | `jjhy.keystore`             |
 | keystore-别名密码    | `kunpeng462400`             |
 
-## 说明
+```shell
+# 使用java自带的keytool工具查看keystore文件
+keytool -v -list -keystore [keystore]
+```
+## 延伸阅读
 程序使用keystore的好处
 ### 有利于程序升级
 

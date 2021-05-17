@@ -13,8 +13,11 @@ class Config {
 
   /// 接口baseUrl
   // static String baseUrl = 'https://api.jjhycom.cn';
-  static String baseUrl = 'http://10.220.114.131:3000/';
+  static String baseUrl = 'http://10.220.123.66:3000/';
 
   /// 页面背景色
   static Color pageBackgroudColor = Colors.grey.shade100;
+
+  /// amap android key
+  static String amapAndroidKey = '8259a4e186cfd2998ee767e49900b43a';
 }
