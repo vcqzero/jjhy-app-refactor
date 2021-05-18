@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:amap_flutter_location/amap_flutter_location.dart';
+import 'package:amap_flutter_location/amap_location_option.dart';
 import 'package:app/config/Config.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -14,42 +17,63 @@ class LocationResult {
   /// 地址
   String? address;
 
-  ///国家
-  String? country;
+  // ///国家
+  // String? country;
 
-  /// 省
-  String? province;
+  // /// 省
+  // String? province;
 
-  /// 市
-  String? city;
+  // /// 市
+  // String? city;
 
-  /// 区
-  String? district;
+  // /// 区
+  // String? district;
 
-  /// 街道
-  String? street;
+  // /// 街道
+  // String? street;
 }
 
 class MyLocation {
   AMapFlutterLocation _location = new AMapFlutterLocation();
-  Function(Map<String, Object> result) onLocated;
+  Function(LocationResult result) onLocated;
 
   MyLocation({required this.onLocated}) {
+    // _location.setLocationOption(AMapLocationOption(
+    //   onceLocation: true,
+    // ));
     _location.onLocationChanged().listen((Map<String, Object> result) {
       print('获取定位结果');
 
-      print(result);
-      onLocated(result);
+      LocationResult _result = LocationResult();
+      try {
+        _result.success = result['errorCode'] == null;
+        _result.address = result['address'] as String?;
+        _result.latitude = result['latitude'] as double?;
+        _result.longitude = result['longitude'] as double?;
+      } catch (e) {
+        log('解析定位数据错误', error: e);
+      }
+      onLocated(_result);
+      // stop
+      _location.stopLocation();
     });
   }
 
-  startLocation() {
-    requestLocationPermission();
+  /// 开始定位
+  /// 如果未获取定位权限，返回false
+  Future<bool> startLocation() async {
+    bool hasPermission = await requestLocationPermission();
+    if (hasPermission == false) return false;
     _location.startLocation();
+    return true;
   }
 
   stopLocation() {
     _location.stopLocation();
+  }
+
+  destoryLocation() {
+    _location.destroy();
   }
 
   static setKey() {

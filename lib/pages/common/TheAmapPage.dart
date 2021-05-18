@@ -13,7 +13,12 @@ class TheAmapPage extends StatefulWidget {
 
 class _TheAmapPageState extends State<TheAmapPage> {
   MyLocation? _myLocation;
-  onLocated(Map<String, Object> result) {}
+  onLocated(LocationResult result) {
+    print('获取到定位数据');
+    print(result.address);
+    print(result.latitude);
+    print(result.longitude);
+  }
 
   @override
   void initState() {
@@ -29,8 +34,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
         child: MyButton.elevated(
           label: '开始定位',
           onPressed: () {
-            print('开始定位');
-            if (_myLocation != null) _myLocation!.startLocation();
+            if (_myLocation != null) _myLocation?.startLocation();
           },
         ),
       ),
