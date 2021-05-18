@@ -42,7 +42,8 @@ class MyLocation {
     //   onceLocation: true,
     // ));
     _location.onLocationChanged().listen((Map<String, Object> result) {
-      print('获取定位结果');
+      print('MyLocation 获取定位结果');
+      print(result);
 
       LocationResult _result = LocationResult();
       try {
