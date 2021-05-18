@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:app/store/User.dart';
 import 'package:app/utils/MyEasyLoading.dart';
-import 'package:app/utils/MyLocation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:app/utils/MyToast.dart';
@@ -24,7 +23,6 @@ void main() async {
   log('main-> init App');
   MyEasyLoading.config();
   User.reload();
-  MyLocation.setKey();
 }
 
 final RouteObserver routeObserver = RouteObserver();

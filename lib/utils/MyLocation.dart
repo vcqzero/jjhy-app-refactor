@@ -76,13 +76,6 @@ class MyLocation {
     _location.destroy();
   }
 
-  static setKey() {
-    AMapFlutterLocation.setApiKey(
-      Config.amapAndroidKey,
-      "dfb64c0463cb53927914364b5c09aba0",
-    );
-  }
-
   /// 申请定位权限
   Future<bool> requestLocationPermission() async {
     //获取当前的权限
