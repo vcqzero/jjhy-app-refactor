@@ -17,4 +17,7 @@ class Config {
 
   /// 页面背景色
   static Color pageBackgroudColor = Colors.grey.shade100;
+
+  /// 高德地图web服务key
+  static String amapWebServiceKey = '44bfff89d035bbc7b7c698974fe4bf5e';
 }
