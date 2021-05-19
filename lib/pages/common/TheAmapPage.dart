@@ -11,9 +11,9 @@ import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class TheAmapPage extends StatefulWidget {
-  double? latitude;
-  double? longitude;
-  String? address;
+  final double? latitude;
+  final double? longitude;
+  final String? address;
   TheAmapPage({
     Key? key,
     this.address,
@@ -35,6 +35,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
   double? _pickedLatitude; // 选择的维度
   double? _pickedLongitude; // 选择的经度
   TextEditingController _inputController = TextEditingController();
+  TextEditingController _searchController = TextEditingController();
 
   CancelToken? _cancelToken;
 
@@ -123,6 +124,10 @@ class _TheAmapPageState extends State<TheAmapPage> {
     }
   }
 
+  void _searchAddressByKeywork(String keyword) async {
+    print('keyword  $keyword');
+  }
+
   @override
   Widget build(BuildContext context) {
     double lat = widget.latitude ?? 39.909187;
@@ -139,6 +144,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false, // 防止键盘弹出时，重建布局
       appBar: MyAppBar.build(title: 'Amap 地图'),
       body: Column(
         children: [
@@ -147,9 +153,37 @@ class _TheAmapPageState extends State<TheAmapPage> {
               alignment: Alignment.center,
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height / 2,
+                  height: MediaQuery.of(context).size.height * 0.45,
                   child: map,
                 ),
+                // 搜索框
+                Positioned(
+                  left: 0,
+                  top: 0,
+                  child: Container(
+                    // height: 20,
+                    // margin: EdgeInsets.only(left: 10, right: 10),
+                    width: MediaQuery.of(context).size.width,
+                    color: Colors.white54,
+                    child: TextField(
+                      onChanged: _searchAddressByKeywork,
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: '搜索地址',
+                        prefixIcon: Icon(
+                          Icons.search,
+                        ),
+                        suffixIcon: InkWell(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(Icons.clear),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                // 定位图标
                 Positioned(
                   child: Container(
                     child: Icon(
@@ -159,6 +193,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
                     ),
                   ),
                 ),
+                // 审图号
                 Positioned(
                   right: 2,
                   bottom: 2,
@@ -187,22 +222,20 @@ class _TheAmapPageState extends State<TheAmapPage> {
             ),
           ),
           Expanded(
-            child: ListView(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
+            child: Container(
+              padding: EdgeInsets.only(left: 10, right: 10),
+              child: Column(
+                children: [
+                  TextField(
                     controller: _inputController,
                     maxLines: 2,
                     showCursor: false,
                     decoration: InputDecoration(hintText: '请在地图选择位置'),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: MyButton.elevated(label: '确认保存', onPressed: () {}),
-                )
-              ],
+                  SizedBox(height: 10),
+                  MyButton.elevated(label: '确认保存', onPressed: () {})
+                ],
+              ),
             ),
           ),
         ],
