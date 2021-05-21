@@ -35,12 +35,16 @@ class TheSingleInputPage extends StatefulWidget {
   final Future<TheInputDioRes> Function(String str)? remoteValidFun;
 
   /// 数据修改
-  final Future<TheInputDioRes> Function(String sta)? onSubmit;
+  final Future<TheInputDioRes> Function(String inputVal)? onSubmit;
 
   /// 当返回上一步时，执行取消dio操作
   final void Function()? cancelTokenOnPop;
 
+  /// 键盘类型
   final TextInputType? keyboardType;
+
+  /// 最大行
+  final int maxLines;
 
   TheSingleInputPage({
     Key? key,
@@ -52,6 +56,7 @@ class TheSingleInputPage extends StatefulWidget {
     this.onSubmit,
     this.cancelTokenOnPop,
     this.keyboardType,
+    this.maxLines = 1,
   }) : super(key: key);
 
   @override
@@ -122,6 +127,8 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
       } finally {
         setState(() => {_loading = false});
       }
+    } else {
+      Navigator.of(context).pop(val);
     }
   }
 
@@ -145,6 +152,9 @@ class _TheSingleInputPageState extends State<TheSingleInputPage> {
                   helperText: _helper,
                   hintText: widget.placeholder,
                 ),
+                autofocus: true,
+                maxLines: widget.maxLines,
+                // style: TextStyle(height: 50,),
               ),
               SizedBox(height: 10),
 

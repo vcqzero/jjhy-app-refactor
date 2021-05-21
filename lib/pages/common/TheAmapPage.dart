@@ -1,15 +1,27 @@
 import 'dart:developer';
+import 'dart:html';
 
 import 'package:app/api/AmapApi.dart';
+import 'package:app/pages/common/TheSingleInputPage.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyButton.dart';
-import 'package:app/widgets/MyTile.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:amap_flutter_map/amap_flutter_map.dart';
 import 'package:amap_flutter_base/amap_flutter_base.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+class TheAmapPagePopData {
+  final double latitude;
+  final double longitude;
+  final String address;
+  TheAmapPagePopData({
+    required this.address,
+    required this.latitude,
+    required this.longitude,
+  });
+}
 
 class TheAmapPage extends StatefulWidget {
   final double? latitude;
@@ -34,7 +46,8 @@ class _TheAmapPageState extends State<TheAmapPage> {
 
   double? _pickedLatitude; // 选择的维度
   double? _pickedLongitude; // 选择的经度
-  TextEditingController _inputController = TextEditingController();
+  String? _pickedAddress; // 选择的位置
+
   TextEditingController _searchController = TextEditingController();
 
   CancelToken? _cancelToken;
@@ -49,7 +62,9 @@ class _TheAmapPageState extends State<TheAmapPage> {
   @override
   void initState() {
     // _myLocation = MyLocation(onLocated: onLocated);
-    _inputController.text = widget.address ?? '';
+    _pickedLatitude = widget.latitude;
+    _pickedLongitude = widget.longitude;
+    _pickedAddress = widget.address;
     _checkPermissions();
     super.initState();
   }
@@ -118,7 +133,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
       }
       Map regeocode = data['regeocode'];
       String? _address = regeocode['formatted_address'];
-      setState(() => {_inputController.text = _address ?? ''});
+      setState(() => {_pickedAddress = _address ?? ''});
     } catch (e) {
       log('查询地理信息出错', error: e);
     }
@@ -131,7 +146,7 @@ class _TheAmapPageState extends State<TheAmapPage> {
     _poisResultTile?.clear();
     if (address != null) {
       _searchController.text = address;
-      _inputController.text = address;
+      _pickedAddress = address;
     }
 
     log('选择的经纬度， $location');
@@ -196,15 +211,31 @@ class _TheAmapPageState extends State<TheAmapPage> {
     _mapController?.moveCamera(CameraUpdate.newLatLng(LatLng(lat, lng)));
   }
 
+  void _onEditAddress(String address) async {
+    String? _editedAddress = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (c) => TheSingleInputPage(
+          val: address,
+          maxLines: 2,
+        ),
+      ),
+    );
+    if (_editedAddress != null) {
+      setState(() {
+        _pickedAddress = _editedAddress;
+      });
+    }
+    log('返回了，获取返回结果 $_editedAddress');
+  }
+
   @override
   Widget build(BuildContext context) {
-    double lat = widget.latitude ?? 39.909187;
-    double long = widget.longitude ?? 116.397451;
     // 创建地图
     final AMapWidget map = AMapWidget(
       // 设置地图center坐标
       initialCameraPosition: CameraPosition(
-        target: LatLng(lat, long),
+        target: LatLng(
+            widget.latitude ?? 39.909187, widget.longitude ?? 116.397451),
         zoom: 15.0,
       ),
       onMapCreated: _onMapCreated,
@@ -335,14 +366,41 @@ class _TheAmapPageState extends State<TheAmapPage> {
               padding: EdgeInsets.only(left: 10, right: 10),
               child: Column(
                 children: [
-                  TextField(
-                    controller: _inputController,
-                    maxLines: 2,
-                    showCursor: false,
-                    decoration: InputDecoration(hintText: '请在地图选择位置'),
-                  ),
                   SizedBox(height: 10),
-                  MyButton.elevated(label: '确认保存', onPressed: () {})
+                  ListTile(
+                    trailing: _pickedAddress != null
+                        ? IconButton(
+                            onPressed: () => _onEditAddress(_pickedAddress!),
+                            icon: Text(
+                              "修改",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          )
+                        : null,
+                    title: Text(_pickedAddress ?? '请选择地址'),
+                  ),
+                  Divider(),
+                  // SizedBox(height: 10),
+                  MyButton.elevated(
+                    label: '确认',
+                    disabled: (_pickedLatitude == null ||
+                            _pickedLongitude == null ||
+                            _pickedAddress == null) ||
+                        (widget.latitude == _pickedLatitude &&
+                            widget.longitude == _pickedLongitude &&
+                            widget.address == _pickedAddress),
+                    onPressed: () {
+                      if (_pickedLatitude != null &&
+                          _pickedLongitude != null &&
+                          _pickedAddress != null) {
+                        Navigator.of(context).pop(TheAmapPagePopData(
+                          address: _pickedAddress!,
+                          latitude: _pickedLatitude!,
+                          longitude: _pickedLongitude!,
+                        ));
+                      }
+                    },
+                  )
                 ],
               ),
             ),
