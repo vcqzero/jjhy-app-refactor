@@ -1,8 +1,6 @@
 import 'dart:developer';
 
 import 'package:amap_flutter_location/amap_flutter_location.dart';
-import 'package:amap_flutter_location/amap_location_option.dart';
-import 'package:app/config/Config.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LocationResult {
