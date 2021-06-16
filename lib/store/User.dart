@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:app/api/UserApi.dart';
+import 'package:app/config/Config.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/utils/MyDio.dart';
 import 'package:app/utils/MyString.dart';
@@ -119,7 +120,11 @@ class User {
     username = map['username'];
     tel = map['tel'];
     if (tel != null) telEncryption = MyString.encryptPhone(tel!);
-    avatar = map['avatar'];
+
+    // avatar_path为相对路径
+    String? avatarPath = map['avatar_path'];
+    avatar = avatarPath != null ? Config.getBaseUrl() + avatarPath : null;
+
     realname = map['realname'];
     nickname = map['nickname'];
     hasPassword = map['has_password'] ?? false;

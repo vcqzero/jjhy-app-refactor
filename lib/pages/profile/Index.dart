@@ -84,6 +84,7 @@ class _ProfilePageState extends State<ProfilePage> with RouteAware {
                 flex: 1,
                 child: _login
                     ? TheListSection()
+                    // 未登录时
                     : Container(
                         alignment: Alignment.center,
                         child: MyLoginButton(),

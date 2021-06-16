@@ -1,8 +1,8 @@
-import 'package:app/api/AppSetings.dart';
+// import 'package:app/api/AppSetings.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/pages/common/TheAmapPage.dart';
 import 'package:app/pages/home/widges/TheIconItem.dart';
-import 'package:app/utils/MyDio.dart';
+// import 'package:app/utils/MyDio.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -26,46 +26,46 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     // 从pageStorage中读取数据
-    String? imageUrlInStorage =
-        PageStorage.of(context)!.readState(context, identifier: 'imageUrl');
-    if (imageUrlInStorage != null) {
-      setState(() => {imageUrl = imageUrlInStorage});
-    } else {
-      _handleQueryBanner();
-    }
+    // String? imageUrlInStorage =
+    //     PageStorage.of(context)!.readState(context, identifier: 'imageUrl');
+    // if (imageUrlInStorage != null) {
+    //   setState(() => {imageUrl = imageUrlInStorage});
+    // } else {
+    //   _handleQueryBanner();
+    // }
     super.didChangeDependencies();
   }
 
-  void _handleQueryBanner() async {
-    try {
-      MyResponse res = AppSetings.getBanners();
-      cancelToken = res.cancelToken;
-      String? imgUrl = await res.future.then((r) => r.data['items'][0]['url']);
-      if (imgUrl == null) return;
-      setState(() {
-        imageUrl = imgUrl;
-        PageStorage.of(context)!
-            .writeState(context, imageUrl, identifier: 'imageUrl');
-      });
-    } on DioError catch (e) {
-      print(e);
-    }
-  }
+  // void _handleQueryBanner() async {
+  //   try {
+  //     MyResponse res = AppSetings.getBanners();
+  //     cancelToken = res.cancelToken;
+  //     String? imgUrl = await res.future.then((r) => r.data['items'][0]['url']);
+  //     if (imgUrl == null) return;
+  //     setState(() {
+  //       imageUrl = imgUrl;
+  //       PageStorage.of(context)!
+  //           .writeState(context, imageUrl, identifier: 'imageUrl');
+  //     });
+  //   } on DioError catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   /// 加载banner
-  Widget _renderBannerImage() {
-    if (imageUrl == null) {
-      return Image.asset(ImageAssets.defaultBannerImage);
-    } else {
-      return Image.network(
-        imageUrl!,
-        errorBuilder:
-            (BuildContext context, Object exception, StackTrace? stackTrace) {
-          return Image.asset(ImageAssets.defaultBannerImage);
-        },
-      );
-    }
-  }
+  // Widget _renderBannerImage() {
+  //   if (imageUrl == null) {
+  //     return Image.asset(ImageAssets.defaultBannerImage);
+  //   } else {
+  //     return Image.network(
+  //       imageUrl!,
+  //       errorBuilder:
+  //           (BuildContext context, Object exception, StackTrace? stackTrace) {
+  //         return Image.asset(ImageAssets.defaultBannerImage);
+  //       },
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           // 顶部banner
           Container(
-            child: _renderBannerImage(),
+            child: Image.asset(ImageAssets.defaultBannerImage),
             margin: EdgeInsets.only(bottom: 10),
           ),
           Expanded(

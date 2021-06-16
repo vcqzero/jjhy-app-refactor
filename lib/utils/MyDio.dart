@@ -3,10 +3,9 @@ import 'dart:developer';
 import 'package:app/config/Config.dart';
 import 'package:app/store/Token.dart';
 import 'package:app/store/User.dart';
+import 'package:app/utils/MyMode.dart';
 import 'package:app/utils/MyToast.dart';
 import 'package:dio/dio.dart';
-
-const bool _inProduction = const bool.fromEnvironment("dart.vm.product");
 
 class MyResponse {
   Future<Response> future;
@@ -28,7 +27,7 @@ class MyDio {
   static _initInstance() {
     _instance = Dio(
       BaseOptions(
-        baseUrl: Config.baseUrl + '/api',
+        baseUrl: Config.getBaseUrl() + '/api',
         connectTimeout: 6000,
         receiveTimeout: 6000,
       ),
@@ -82,7 +81,7 @@ class MyDio {
       ),
     );
     // 请求日志
-    if (!_inProduction) {
+    if (MyMode.inProduction != true) {
       _instance.interceptors.add(LogInterceptor(
         requestHeader: true,
         responseHeader: false,

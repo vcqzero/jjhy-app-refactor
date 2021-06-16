@@ -1,3 +1,4 @@
+import 'package:app/utils/MyMode.dart';
 import 'package:flutter/material.dart';
 
 class Config {
@@ -12,8 +13,15 @@ class Config {
   static String privacyUrl = 'https://api.jjhycom.cn/privacy';
 
   /// 接口baseUrl
-  // static String baseUrl = 'https://api.jjhycom.cn';
-  static String baseUrl = 'http://10.220.123.66:3000/';
+  static String baseUrlProduction = 'https://api.jjhycom.cn';
+  static String baseUrlDevelopment = 'http://10.231.92.39:3000/';
+
+  /// 获取baseurl
+  static String getBaseUrl() {
+    return MyMode.inProduction
+        ? Config.baseUrlProduction
+        : Config.baseUrlDevelopment;
+  }
 
   /// 页面背景色
   static Color pageBackgroudColor = Colors.grey.shade100;
