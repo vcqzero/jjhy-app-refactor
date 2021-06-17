@@ -7,8 +7,8 @@ class MyTile extends StatefulWidget {
   final String? trailingString;
   final void Function()? onTap;
   final Color titleColor;
-  final String? svg;
-  final Color svgColor;
+  final String? leadingSvg;
+  final Color leadingSvgColor;
 
   /// 如果[trailingWidget] 不为null，优先渲染trailingWidget，
   /// 否则渲染[trailingString]
@@ -19,8 +19,8 @@ class MyTile extends StatefulWidget {
     this.trailingString,
     this.onTap,
     this.titleColor = Colors.black,
-    this.svg,
-    this.svgColor = Colors.black,
+    this.leadingSvg,
+    this.leadingSvgColor = Colors.black,
   }) : super(key: key);
 
   @override
@@ -57,12 +57,12 @@ class _MyTileState extends State<MyTile> {
     return Column(
       children: [
         ListTile(
-          leading: widget.svg != null
+          leading: widget.leadingSvg != null
               ? Container(
                   child: SvgPicture.asset(
-                    widget.svg!,
+                    widget.leadingSvg!,
                     semanticsLabel: 'svg',
-                    color: widget.svgColor,
+                    color: widget.leadingSvgColor,
                     width: 32,
                   ),
                 )

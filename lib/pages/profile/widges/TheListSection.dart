@@ -15,8 +15,8 @@ class TheListSection extends StatelessWidget {
         MyTile(
           title: '我的项目',
           trailingString: '未设置',
-          svg: SvgAssets.workyard,
-          svgColor: Colors.blue,
+          leadingSvg: SvgAssets.workyard,
+          leadingSvgColor: Colors.blue,
           onTap: () {},
         ),
       ],
