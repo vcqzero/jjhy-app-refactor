@@ -137,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> with RouteAware {
           // 绑定手机
           MyTile(
             title: '绑定手机',
-            trailingWidget: Text(_user.telEncryption ?? '未绑定'),
+            trailingString: _user.telEncryption ?? '未绑定',
             onTap: () {
               Navigator.push(
                 context,

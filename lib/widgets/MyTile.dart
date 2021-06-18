@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-class MyTile extends StatefulWidget {
+class MyTile extends StatelessWidget {
   final String title;
   final Color titleColor;
   final String? subtitle;
@@ -14,9 +14,7 @@ class MyTile extends StatefulWidget {
 
   final void Function()? onTap;
 
-  /// 如果[trailingWidget] 不为null，优先渲染trailingWidget，
-  /// 否则渲染[trailingString]
-  MyTile({
+  const MyTile({
     Key? key,
     required this.title,
     this.titleColor = Colors.black,
@@ -28,32 +26,26 @@ class MyTile extends StatefulWidget {
     this.onTap,
   }) : super(key: key);
 
-  @override
-  _MyTileState createState() => _MyTileState();
-}
-
-class _MyTileState extends State<MyTile> {
-  List<Widget> _handleBuildTrailing() {
+  List<Widget> _getTrailingChildren() {
     List<Widget> list = [];
-    // 优选渲染trailingWidget
-    if (widget.trailingWidget != null) {
-      list.add(widget.trailingWidget!);
-    } else if (widget.trailingString != null) {
-      list.add(
-        Container(
-          width: 180,
-          alignment: Alignment.centerRight,
-          child: Text(
-            widget.trailingString!,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      );
-    }
-    // 添加向右箭头
-    if (widget.onTap != null) {
-      list.add(Icon(Icons.chevron_right));
-    }
+
+    Widget? _widget = trailingWidget != null
+        ? trailingWidget
+        : trailingString != null
+            ? Container(
+                constraints: BoxConstraints(maxWidth: 120),
+                alignment: Alignment.centerRight,
+                child: Text(
+                  trailingString!,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              )
+            : null;
+
+    if (_widget != null) list.add(_widget);
+    if (onTap != null) list.add(Icon(Icons.chevron_right)); // 添加向右箭头
+
     return list;
   }
 
@@ -62,45 +54,51 @@ class _MyTileState extends State<MyTile> {
     return Column(
       children: [
         ListTile(
-          leading: widget.leadingSvg != null
+          leading: leadingSvg != null
               ? Container(
                   child: SvgPicture.asset(
-                    widget.leadingSvg!,
+                    leadingSvg!,
                     semanticsLabel: 'svg',
-                    color: widget.leadingSvgColor,
+                    color: leadingSvgColor,
                     width: 32,
                   ),
                 )
               : null,
+
+          title: Text(
+            title,
+            style: TextStyle(
+              color: titleColor,
+            ),
+            // maxLines: 1,
+          ),
+
           tileColor: Colors.white,
-          subtitle: widget.subtitle != null
+          subtitle: subtitle != null
               ? Text(
-                  widget.subtitle!,
+                  subtitle!,
                   style: TextStyle(fontSize: 14),
                 )
               : null,
-          title: Text(
-            widget.title,
-            style: TextStyle(
-              color: widget.titleColor,
-            ),
-            // maxLines: 1,
-            overflow: TextOverflow.visible,
-          ),
 
           /// 尾部
-          trailing: Container(
-            width: 220,
-            // color: Colors.red,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: _handleBuildTrailing(),
-            ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: _getTrailingChildren(),
+                ),
+              ),
+            ],
           ),
 
-          onTap: widget.onTap,
+          onTap: onTap,
         ),
-        Divider(height: 1),
+        Divider(
+          height: 1,
+        ),
       ],
     );
   }

@@ -21,27 +21,28 @@ class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
     super.initState();
   }
 
-  List _getWorkyardTiles() {
-    List<Widget> tilss = [];
-    _user.workyards?.forEach((workyard) {
-      String? name = workyard['name'];
-      int? id = workyard['id'];
-      Map? pivot = workyard['pivot'];
-      String? roleName = pivot?['role'];
-      String roleLabel = MyRoles().getLabel(roleName);
-      bool isUsing = id != null &&
-          _user.workyard?['id'] != null &&
-          id == _user.workyard?['id'];
-      tilss.add(
-        MyTile(
-          title: name ?? '',
-          subtitle: roleLabel,
-          trailingString: isUsing ? '正在使用' : null,
-          onTap: isUsing ? null : () {},
-        ),
-      );
-    });
-    return tilss;
+  Widget _getItemTile(int index) {
+    Map workyard = _user.workyards?[index] ?? {};
+    String? name = workyard['name'];
+    int? id = workyard['id'];
+    Map? pivot = workyard['pivot'];
+    String? roleName = pivot?['role'];
+    String roleLabel = MyRoles().getLabel(roleName);
+    bool isUsing = id != null &&
+        _user.workyard?['id'] != null &&
+        id == _user.workyard?['id'];
+
+    return MyTile(
+      title: name ?? '',
+      subtitle: roleLabel,
+      trailingWidget: isUsing
+          ? Text(
+              '正在使用',
+              style: TextStyle(color: Colors.green),
+            )
+          : Text('切换'),
+      onTap: isUsing ? null : () {},
+    );
   }
 
   @override
@@ -58,14 +59,11 @@ class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
             ),
           ],
         ),
-        body: ListView(
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Divider(height: 1),
-            ..._getWorkyardTiles()
-          ],
+        body: ListView.builder(
+          itemBuilder: (context, index) {
+            return _getItemTile(index);
+          },
+          itemCount: _user.workyards?.length,
         ),
       ),
     );
