@@ -62,6 +62,7 @@ flutter:
     - lib/assets/default_banner.jpeg
     - lib/assets/logo_in_login.png
     - lib/assets/logo_in_about.png
+    - lib/assets/svg/switch.svg
     - lib/assets/svg/workyard.svg
 
   # An image asset can refer to one or more resolution-specific "variants", see

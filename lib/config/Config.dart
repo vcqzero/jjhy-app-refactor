@@ -14,7 +14,7 @@ class Config {
 
   /// 接口baseUrl
   static String baseUrlProduction = 'https://api.jjhycom.cn';
-  static String baseUrlDevelopment = 'http://10.231.92.57:3000/';
+  static String baseUrlDevelopment = 'http://10.231.92.48:3000';
 
   /// 获取baseurl
   static String getBaseUrl() {

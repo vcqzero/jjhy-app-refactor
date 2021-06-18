@@ -7,4 +7,5 @@ class ImageAssets {
 class SvgAssets {
   /// 项目svg
   static const workyard = 'lib/assets/svg/workyard.svg';
+  static const switchWorkyard = 'lib/assets/svg/switch.svg';
 }
