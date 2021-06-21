@@ -72,7 +72,6 @@ class MyTile extends StatelessWidget {
             ),
             // maxLines: 1,
           ),
-
           tileColor: Colors.white,
           subtitle: subtitle != null
               ? Text(

@@ -1,8 +1,15 @@
+import 'dart:developer';
+
+import 'package:app/api/UserApi.dart';
 import 'package:app/assets/ImageAssets.dart';
 import 'package:app/store/User.dart';
+import 'package:app/utils/MyDialog.dart';
+import 'package:app/utils/MyDio.dart';
+import 'package:app/utils/MyEasyLoading.dart';
 import 'package:app/utils/MyRoles.dart';
 import 'package:app/widgets/MyAppBar.dart';
 import 'package:app/widgets/MyTile.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class ExchangeWorkyard extends StatefulWidget {
@@ -14,6 +21,8 @@ class ExchangeWorkyard extends StatefulWidget {
 
 class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
   late User _user;
+  CancelToken? _cancelToken;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -21,16 +30,44 @@ class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
     super.initState();
   }
 
-  Widget _getItemTile(int index) {
+  @override
+  void dispose() {
+    _cancelToken?.cancel();
+    super.dispose();
+  }
+
+  _exchangeWrokyard(int? wid) async {
+    try {
+      if (_loading || wid == null) return;
+      _loading = true;
+
+      MyEasyLoading.loading('切换中...');
+      MyResponse res = UserApi.exchangeWorkyard(wid);
+      _cancelToken = res.cancelToken;
+      await res.future.then((value) => null);
+      await User.reload();
+      setState(() {
+        _user = User.cached();
+      });
+      MyEasyLoading.success('操作成功');
+    } catch (e) {
+      log('错误', error: e);
+    } finally {
+      _loading = false;
+      MyEasyLoading.hide();
+    }
+  }
+
+  Widget _getItemTile(int index, BuildContext context) {
     Map workyard = _user.workyards?[index] ?? {};
     String? name = workyard['name'];
-    int? id = workyard['id'];
+    int? wid = workyard['id'];
     Map? pivot = workyard['pivot'];
     String? roleName = pivot?['role'];
     String roleLabel = MyRoles().getLabel(roleName);
-    bool isUsing = id != null &&
+    bool isUsing = wid != null &&
         _user.workyard?['id'] != null &&
-        id == _user.workyard?['id'];
+        wid == _user.workyard?['id'];
 
     return MyTile(
       title: name ?? '',
@@ -41,7 +78,16 @@ class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
               style: TextStyle(color: Colors.green),
             )
           : Text('切换'),
-      onTap: isUsing ? null : () {},
+      onTap: isUsing
+          ? null
+          : () {
+              MyDialog(
+                context,
+                title: '提示',
+                textChildren: [Text('切换至此项目?')],
+                onConfirm: () => {_exchangeWrokyard(wid)},
+              ).open();
+            },
     );
   }
 
@@ -60,8 +106,8 @@ class _ExchangeWorkyardState extends State<ExchangeWorkyard> {
           ],
         ),
         body: ListView.builder(
-          itemBuilder: (context, index) {
-            return _getItemTile(index);
+          itemBuilder: (c, index) {
+            return _getItemTile(index, context);
           },
           itemCount: _user.workyards?.length,
         ),

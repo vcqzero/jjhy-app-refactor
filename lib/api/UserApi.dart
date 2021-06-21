@@ -73,4 +73,16 @@ class UserApi {
     );
     return MyResponse(future: future, cancelToken: cancelToken);
   }
+
+  /// 切换项目
+  static MyResponse exchangeWorkyard(int wid) {
+    // dio
+    CancelToken cancelToken = CancelToken();
+    final future = _dio.put(
+      '/users/me/workyard',
+      cancelToken: cancelToken,
+      data: {'workyard_id': wid},
+    );
+    return MyResponse(future: future, cancelToken: cancelToken);
+  }
 }

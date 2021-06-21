@@ -18,7 +18,7 @@ class MyEasyLoading {
   }
 
   // 显示success
-  static success(status) {
+  static success(String status) {
     EasyLoading.showSuccess(status);
   }
 

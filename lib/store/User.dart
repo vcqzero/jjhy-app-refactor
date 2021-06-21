@@ -102,6 +102,7 @@ class User {
   }
 
   /// 从服务器重新刷新用户数据
+  /// 然后调用User.cached()
   static Future<void> reload() async {
     try {
       // 判断是否存在token
